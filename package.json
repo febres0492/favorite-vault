@@ -1,0 +1,19 @@
+{
+  "name": "favorite-vault",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/febres0492/favorite-vault.git"
+  },
+  "author": "Carlos Febres",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/febres0492/favorite-vault/issues"
+  },
+  "homepage": "https://github.com/febres0492/favorite-vault#readme"
+}
