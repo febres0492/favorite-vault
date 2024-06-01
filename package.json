@@ -1,0 +1,33 @@
+{
+  "name": "favorite-vault",
+  "version": "1.0.0",
+  "description": "A watchlist manager leveraging psql, express, pg, sequelize and bcrypt",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "sequelize": "^6.37.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/febres0492/favorite-vault.git"
+  },
+  "keywords": [
+    "pg",
+    "sequelize",
+    "express",
+    "psql",
+    "bcrypt"
+  ],
+  "author": "Carlos Ferbes, Fabricio Guacuto, Michael Smith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/febres0492/favorite-vault/issues"
+  },
+  "homepage": "https://github.com/febres0492/favorite-vault#readme"
+}
