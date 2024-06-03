@@ -1,0 +1,107 @@
+@keyframes shadow-move {
+    0% {
+        box-shadow: 0 0 10px 10px rgba(0, 194, 203, 0.5);
+    }
+    25% {
+        box-shadow: 5px 0 10px 5px rgba(0, 194, 203, 0.5); 
+    }
+    50% {
+        box-shadow: 5px 5px 10px 5px rgba(0, 194, 203, 0.5);
+    }
+    75% {
+        box-shadow: 0 5px 10px 5px rgba(0, 194, 203, 0.5); 
+    }
+    100% {
+        box-shadow: 0 0 10px 10px rgba(0, 194, 203, 0.5);
+    }
+}
+
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body{
+    color:white;
+
+    background: linear-gradient(to bottom right, #273469, #8a3ab9);
+    /* For older browsers that do not support gradients */
+    /* -webkit- is used for browsers like Safari and Chrome.*/
+    background: -webkit-linear-gradient(#273469, #8a3ab9);
+    /* -moz- is used for Firefox. */
+    background: -moz-linear-gradient(#273469, #8a3ab9);
+    /* -o- is used for Opera. */
+    background: -o-linear-gradient(#273469, #8a3ab9);
+
+    margin: 0;
+    padding-bottom: 100px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px; 
+}
+
+.login-card {
+    padding: 5px; 
+}
+
+
+.Error{
+    color:red;
+    text-shadow: 
+        -1px -1px 0 black,  
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;
+}
+
+.round {
+    width: 18rem;
+    animation: shadow-move 5s linear infinite;
+}
+
+
+.icons {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.icons i {
+    position: absolute;
+    animation: float 10s infinite;
+}
+
+.icons .fa-film { top: 10%; left: 20%; animation-duration: 8s; }
+.icons .fa-video { top: 30%; left: 50%; animation-duration: 10s; }
+.icons .fa-ticket-alt { top: 70%; left: 80%; animation-duration: 12s; }
+.icons .fa-theater-masks { top: 60%; left: 40%; animation-duration: 14s; }
+.icons .fa-tv { top: 80%; left: 10%; animation-duration: 16s; }
+.icons .fa-play-circle { top: 20%; left: 70%; animation-duration: 18s; }
+.icons .fa-pause-circle { top: 40%; left: 10%; animation-duration: 18s; }
+
+
+
+@media screen and (min-width: 810px) {
+    .round {
+      margin: 4rem;
+    }
+}
+
+@media (max-width: 810px) {
+    .welcome {
+        margin-top: 2rem; 
+    }
+}

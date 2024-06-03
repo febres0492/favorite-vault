@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-require('dotenv').config();
 
 const sequelize = process.env.DB_URL
   ? new Sequelize(process.env.DB_URL)
@@ -12,5 +11,10 @@ const sequelize = process.env.DB_URL
       dialect: 'postgres',
     }
   );
+// const sequelize = new Sequelize(process.env.POSTGRESURL,
+//   {dialectOptions:{
+//     ssl:{require:true}
+//   }}
+// )
 
 module.exports = sequelize;

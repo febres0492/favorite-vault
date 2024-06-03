@@ -5,4 +5,8 @@ router.get('/', async (req, res) => {
   res.render('homepage');
 });
 
+router.get('/signin', async (req, res) => {
+  // Send the rendered singin template
+  res.render('signin')
+})
 module.exports = router;

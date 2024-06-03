@@ -1,24 +1,24 @@
-const { Model, DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
+const { Model, DataTypes, UUIDV4 } = require('sequelize');
 const sequelize = require('../config/connection');
+const bcrypt = require('bcrypt');
 
 class User extends Model {
-  checkPassword(loginPw) {
+checkPassword(loginPw) {
     return bcrypt.compareSync(loginPw, this.password);
-  }
-}
+  }}
 
 User.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: UUIDV4,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
     },
-    name: {
+    user_name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -33,17 +33,37 @@ User.init(
       allowNull: false,
       validate: {
         len: [8],
+        customsecurecheck(value) {
+          if (!/[A-Z]/.test(value)) {
+            throw new Error('Password must contain at least one uppercase letter');
+          }
+          if (!/[a-z]/.test(value)) {
+            throw new Error('Password must contain at least one lowercase letter');
+          }
+          if (!/[^A-Za-z0-9]/.test(value)) {
+            throw new Error('Password must contain at least one special character');
+          }
+          if (!/[0-9]/.test(value)) {
+            throw new Error('Password must contain at least one number');
+          }
+        },
       },
     },
   },
   {
     hooks: {
-      beforeCreate: async (newUserData) => {
-        newUserData.password = await bcrypt.hash(newUserData.password, 10);
-        return newUserData;
+      beforeCreate: async (user) => {
+        console.log(user.password)
+        user.password = await bcrypt.hash(user.password, 10);
+        console.log(user.password)
+      },
+      beforeUpdate: async (userNew) => {
+        if (userNew.changed('password')) {
+          userNew.password = await bcrypt.hash(userNew.password, 10);
+        }
       },
     },
-    sequelize,
+    sequelize, 
     timestamps: false,
     freezeTableName: true,
     underscored: true,

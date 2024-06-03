@@ -1,25 +1,43 @@
-<div class="row align-center mb-5">
+<div class="row  align-center mb-5">
     <div class="col-md-6">
-        <!-- Call the helper function with triple brackets to render the span as HTML -->
-        <h2>{{{get_emoji}}} Test User</h2>
+      <div class="login-card round">
+    <h2 class="page-title text-center">Login</h2>
+    <form class="form login-form" >
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input class="form-control" type="text" id="email" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input class="form-control" type="password" id="password" />
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary"  type="submit">login</button>
+      </div>
+    </form>
+      <div class="form-group">
+        <button class="btn btn-primary" id="sign-in">Sign in</button>
+      </div>
+  </div>
     </div>
-    <div class="col-md-6 border">
-        <h3><a href="mailto:test@gmail.com">test@gmail.com</a></h3>
+    <div class="col-md-6">
+      <div class="welcome">
+        <h3>Welcome back to Favorite Vault</h3>
+        <p>Log in to access your watchlist</p>
+        <ul>
+          <li>Access your personal watchlist</li>
+          <li>Recieve personalized recomendations</li>
+        </ul>
+      </div>
+      <div class="icons">
+            <i class="fas fa-film fa-2x"></i>
+            <i class="fas fa-video fa-2x"></i>
+            <i class="fas fa-ticket-alt fa-2x"></i>
+            <i class="fas fa-theater-masks fa-2x"></i>
+            <i class="fas fa-tv fa-2x"></i>
+            <i class="fas fa-play-circle fa-2x"></i>
+            <i class="fas fa-pause-circle fa-2x"></i>
+        </div>
     </div>
 </div>
-<div class="row align-center mb-5">
-    <div class="col-md-6">
-        <h2>{{{get_emoji}}} Test User</h2>
-    </div>
-    <div class="col-md-6">
-        <h3><a href="mailto:test@gmail.com">test@gmail.com</a></h3>
-    </div>
-</div>
-<div class="row align-center mb-5">
-    <div class="col-md-6">
-        <h2>{{{get_emoji}}} Test User</h2>
-    </div>
-    <div class="col-md-6">
-        <h3><a href="mailto:test@gmail.com">test@gmail.com</a></h3>
-    </div>
-</div>
+<script src="./js/login.js"></script>
