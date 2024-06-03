@@ -49,11 +49,15 @@ router.post('/signup', async (req, res) => {
 
         const userAlreadyExist = await User.findOne({ where: { email: req.body.email } })
         if (userAlreadyExist) {
+            console.log(' --------- userAlreadyExist', userAlreadyExist)
             res.status(409).json({ message: 'Email already in use' })
             return
         }
 
-        const userData = await User.create(req.body)
+        // renaming name_lastname to name
+        const data = { ...req.body, name: req.body.name_lastname }
+        delete data.name_lastname
+        const userData = await User.create(data)
 
         req.session.save(() => {
             req.session.user_id = userData.id
@@ -61,8 +65,6 @@ router.post('/signup', async (req, res) => {
 
             res.status(200).json(userData)
         })
-
-        res.status(200).json(userData)
     } catch (err) {
         res.status(400).json(err)
     }
