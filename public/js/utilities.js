@@ -6,3 +6,4 @@ function handleUrlParamsMessage() {
         window.alert('Page not found! Redirecting to homepage...')
     }
 }
+
