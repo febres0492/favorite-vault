@@ -18,6 +18,7 @@ module.exports = {
         res.render(page , {
             logged_in: req.session.logged_in,
             user_id: req.session.user_id,
+            currUser: req.session.currUser,
             message: message
         })
     },

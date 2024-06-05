@@ -11,9 +11,10 @@ router.get('/', withAuth, async (req, res) => {
         });
 
         const users = userData.map((project) => project.get({ plain: true }));
-
+        console.log(c('users: '), users.find(user => user.id === req.session.user_id))
         res.render('homepage', {
             users,
+            currUser: users.find(user => user.id === req.session.user_id),
             logged_in: req.session.logged_in,
         });
     } catch (err) {

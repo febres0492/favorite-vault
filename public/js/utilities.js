@@ -7,3 +7,11 @@ function handleUrlParamsMessage() {
     }
 }
 
+function handleDropdown() {
+    const dropdown = [...document.querySelectorAll('.dropdown')]
+    dropdown.forEach(item => {
+        item.addEventListener('click', () => {
+            item.querySelector('.dropdown-menu').classList.toggle('show-dropdown')
+        })
+    })
+}
