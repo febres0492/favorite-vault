@@ -1,0 +1,39 @@
+
+<!-- The form -->
+<form class="form search-form" action="action_page.php">
+  <input type="text" placeholder="Search for a book..." name="search" id="myInput">
+  <button type="submit"><i class="fa fa-search"></i></button>
+</form>
+
+ <div id="content"></div>
+      <div class="col-lg-6" id="main-content">      
+</div>    
+{{!-- <script>
+      let placeHldr = '<img src="https://via.placeholder.com/150">';
+       
+      function handleResponse(response) {
+       
+      for (var i = 0; i < response.items.length; i++) {
+        let item = response.items[i];
+
+        // in production code, item.text should have the HTML entities escap ed.
+      //  document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title + "<br>" + item.volumeInfo.previewLink;
+       // let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr ;
+       // document.getElementById("content").innerHTML += "<br>" +  `<div class="card" style="">
+         <div class="row no-gutters">
+           <div class="col-md-4">
+             <img src="${bookImg1}" class="card-img" alt="...">
+           </div>`
+       
+      }
+      }
+
+    
+
+    let input = document.getElementById("myInput");
+    let inputValue = input.value;
+    let source = `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&callback=handleResponse`
+    </script>
+    <script src="https://www.googleapis.com/books/v1/volumes?q=red+risings&callback=handleResponse"></script> --}}
+
+

@@ -12,11 +12,6 @@
 <!-- Load icon library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<!-- The form -->
-<form class="example" action="action_page.php">
-  <input type="text" placeholder="Search for a book..." name="search">
-  <button type="submit"><i class="fa fa-search"></i></button>
-</form>
 <body>
     <header class="display-flex justify-space-between align-center p-2">
         <h1>
@@ -32,43 +27,6 @@
         {{{ body }}}
     </main>
 
-
-     <div id="content"></div>
-      <div class="col-lg-6" id="main-content">
-             
-       </div>       
-    <script>
-      let placeHldr = '<img src="https://via.placeholder.com/150">';
-       
-      function handleResponse(response) {
-       
-      for (var i = 0; i < response.items.length; i++) {
-        let item = response.items[i];
-
-        // in production code, item.text should have the HTML entities escap ed.
-        document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title + "<br>" + item.volumeInfo.previewLink;
-        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr ;
-        document.getElementById("content").innerHTML += "<br>" +  `<div class="card" style="">
-         <div class="row no-gutters">
-           <div class="col-md-4">
-             <img src="${bookImg1}" class="card-img" alt="...">
-           </div>`
-       
-      }
-      }
-
-    function formatOutput(bookImg) {
-     // console.log(title + ""+ author +" "+ publisher +" "+ bookLink+" "+ bookImg)
-     var htmlCard = `
-       <div class="card" style="">
-         <div class="row no-gutters">
-           <div class="col-md-4">
-             <img src="${bookImg}" class="card-img" alt="...">
-           </div>`
-    document.getElementById("main-content").innerHTML += htmlCard +"<br>" ;
-    }
-    </script>
-    <script src="https://www.googleapis.com/books/v1/volumes?q=lord+of+the+rings&callback=handleResponse"></script>
     <footer>
 
     </footer>

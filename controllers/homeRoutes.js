@@ -42,4 +42,10 @@ router.get('*', (req, res) => {
     res.redirect('/?msg=0')
 })
 
+router.get('/search/books', (req, res)=> {
+
+    console.log("This is the search results page for books...")
+    
+})
+
 module.exports = router;

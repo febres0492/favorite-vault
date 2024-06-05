@@ -1,3 +1,5 @@
+
+const B_APIKEY = 'AIzaSyDPW7iG7UbDW8ap3Zkzsk72KuLSEw5AlRA'
 function handleUrlParamsMessage() {
     const urlParams = new URLSearchParams(window.location.search)
     const message = urlParams.get('msg')
@@ -8,4 +10,65 @@ function handleUrlParamsMessage() {
 }
 
 //Create functions for google books apis
+
+let placeHldr = '<img src="https://via.placeholder.com/150">';
+       
+function handleResponse(response) {
+ 
+for (var i = 0; i < response.items.length; i++) {
+  let item = response.items[i];
+  let viewUrl = item.volumeInfo.previewLink
+  // in production code, item.text should have the HTML entities escap ed.
+  document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title + "<br>" ;
+  let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr ;
+  document.getElementById("content").innerHTML += "<br>" +  `<div class="card" style="">
+   <div class="row no-gutters">
+     <div class="col-md-4">
+       <img src="${bookImg1}" class="card-img" alt="...">
+       <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
+       <a target="_blank"  class="btn btn-secondary" id="favorite-btn">Favorite</a>
+
+     </div>`
+ 
+}
+}
+
+
+
+// let input = document.getElementById("myInput");
+// let inputValue = input.value;
+// let source = `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&callback=handleResponse`
+
+const searchFormHandler = async (event) => {
+    event.preventDefault();
+    console.log('This is my API Key' + B_APIKEY)
+    const search = document.querySelector('#myInput').value.trim();
+    
+    if (search ) {
+        const request = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${search}&key=${B_APIKEY}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+        myResponse =  await request.json()
+        console.log(myResponse)
+        handleResponse(myResponse)
+    }   
+   
+};
+
+
+const savetoFavorites = () =>{
+    console.log("This link will be saved to favorites")
+    //Save the link to the database
+
+
+
+}
+document
+    .querySelector('#search-button')
+    .addEventListener('click', searchFormHandler);
+document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
+
+ 
+
 
