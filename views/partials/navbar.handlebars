@@ -1,0 +1,17 @@
+<nav class="d-flex jcsb aic p-2">
+    {{#if logged_in}}
+        <button class="btn btn-sm" onclick="window.location.href='/'" type="button">Home</button>
+        <h4>Favorites Vault</h4>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{currUser.name}}
+            </button>
+            <div class="dropdown-menu right-0" aria-labelledby="dropdownMenuButton">
+                <button class="btn btn-sm" id="account-settings" onclick="window.location.href='/user_settings'" type="button">Account</button>
+                <button class="btn btn-sm" id="logout">logout</button>
+            </div>
+        </div>
+    {{/if}}
+
+
+</nav>

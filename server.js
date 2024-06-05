@@ -10,9 +10,13 @@ const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3004;
 
-const hbs = exphbs.create({ helpers });
+const hbs = exphbs.create({
+    helpers,
+    partialsDir: [path.join(__dirname, 'views', 'partials')]
+});
+
 
 const sess = {
     secret: process.env.SESSIONSECRET,
