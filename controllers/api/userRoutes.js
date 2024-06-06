@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { User, Favorites } = require('../../models');
+const c = require('../../utils/helpers').c
 
 router.post('/login', async (req, res) => {
     try {
@@ -58,6 +59,12 @@ router.post('/signup', async (req, res) => {
         const data = { ...req.body, name: req.body.name_lastname }
         delete data.name_lastname
         const userData = await User.create(data)
+        console.log(c('userData'), userData.id)
+        debugger
+        const FavoritesData = await Favorites.create({id: userData.id})
+
+        console.log(c('FavoritesData'), FavoritesData)
+
 
         req.session.save(() => {
             req.session.user_id = userData.id
@@ -66,6 +73,7 @@ router.post('/signup', async (req, res) => {
             res.status(200).json(userData)
         })
     } catch (err) {
+        console.log('err', err)
         res.status(400).json(err)
     }
 })
