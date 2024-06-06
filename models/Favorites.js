@@ -5,21 +5,15 @@ class Favorites extends Model { }
 
 Favorites.init(
     {
-        user_id: {
+        id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true,
-        },
-        // book_title: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        // },
-        // preview_link: {
-        //     type: DataTypes.STRING,
-        //     allowNull: true,
-        // }
-
+            references: {
+                model: 'user',
+                key: 'id',
+            }
+        }
     },
     {
         sequelize,
