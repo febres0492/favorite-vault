@@ -7,6 +7,15 @@ const movieGetter = async () => {
         method: 'GET'
     }).then((res) => {
         console.log('res', res)
+        const items = [...res.results]
+        items.forEach(item => {
+        $('#main-content').append(`<div class=" my-5 border">
+            <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" alt="Movie Poster">
+            <h4>${item.original_title}</h4>
+            <button>Favorite</button>
+</div>
+`)
+        })
     }).catch(err => console.log(err))
 }
 
