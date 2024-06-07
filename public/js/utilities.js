@@ -1,3 +1,18 @@
+// https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27
+
+const movieGetter = async () => {
+    console.log('movieGetter');
+    $.ajax({
+        url: 'https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27',
+        method: 'GET'
+    }).then((res) => {
+        console.log('res', res)
+    }).catch(err => console.log(err))
+}
+
+
+movieGetter();
+
 function handleUrlParamsMessage() {
     const urlParams = new URLSearchParams(window.location.search)
     const message = urlParams.get('msg')
@@ -78,6 +93,4 @@ const savetoFavorites = () =>{
 document
     .querySelector('#search-button')
     .addEventListener('click', searchFormHandler);
-document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
-
- 
+// document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
