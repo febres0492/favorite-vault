@@ -13,22 +13,8 @@
 
 <body>
     <header class="container-fluid">
-        
-        
-        {{!-- <div class="row">
-            <div class="column d-flex px-3">
-                <h4>Favorite Vault</h4>
-                {{#if logged_in}}
-                    <nav>
-                        <button class="btn btn-sm" id="logout">logout</button>
-                        <button class="btn btn-sm" id="account-settings" onclick="window.location.href='/user_settings'" type="button">Account Settings</button>
-                    </nav>
-                {{/if}}
-
-            </div>
-        </div> --}}
+        {{> navbar}}
     </header>
-    {{> navbar}}
     <main class="container-fluid p-0">
         {{{ body }}}
     </main>

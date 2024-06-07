@@ -59,12 +59,9 @@ router.post('/signup', async (req, res) => {
         const data = { ...req.body, name: req.body.name_lastname }
         delete data.name_lastname
         const userData = await User.create(data)
-        console.log(c('userData'), userData.id)
-        debugger
-        const FavoritesData = await Favorites.create({id: userData.id})
 
-        console.log(c('FavoritesData'), FavoritesData)
-
+        // const FavoritesData = await Favorites.create({ userId: userData.id })
+        // console.log(c('FavoritesData'), FavoritesData)
 
         req.session.save(() => {
             req.session.user_id = userData.id
@@ -72,6 +69,23 @@ router.post('/signup', async (req, res) => {
 
             res.status(200).json(userData)
         })
+    } catch (err) {
+        console.log('err', err)
+        res.status(400).json(err)
+    }
+})
+
+//addding item to user's favorites
+router.post('/addFavorite', async (req, res) => {
+    try {
+        const item = {
+            userId: req.session.user_id,
+            itemType: req.body.itemType,
+            itemData: req.body.itemData,
+        }
+        const fabItem = await Favorites.create(item)
+        res.status(200).json(fabItem)
+
     } catch (err) {
         console.log('err', err)
         res.status(400).json(err)
