@@ -42,24 +42,7 @@ router.get('/signup', (req, res) => {
 })
 
 
-//addding item to user's favorites
-router.post('/addFavorite', async (req, res) => {
-    console.log(c('testing add favorite route'))
-    
-    try {
-        const item = {
-            userId: req.session.user_id,
-            itemType: req.body.itemType,
-            itemData: req.body.itemData,
-        }
-        const fabItem = await Favorites.create(item)
-        res.status(200).json(fabItem)
 
-    } catch (err) {
-        console.log('err', err)
-        res.status(400).json(err)
-    }
-})
 
 
 router.get('/:page', withAuth, async (req, res) => {

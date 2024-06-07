@@ -83,8 +83,9 @@ const fav_button =  [...document.querySelectorAll('.result-item')]
 fav_button.forEach(btn => {
    btn.addEventListener('click', ()=> {
     console.log($(btn).closest('.card'))
+    
     $.ajax({
-        url: '/addFavorite',
+        url: 'api/users/addFavorite',
         data: { itemType: 'book', itemData: 'this is a test' },
         method: 'POST'
     }).then((res) => {
