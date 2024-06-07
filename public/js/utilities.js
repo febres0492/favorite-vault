@@ -1,4 +1,7 @@
 // https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27
+// movie name:
+// https://api.themoviedb.org/3/search/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27&query=MOVIENAME
+// 
 
 const movieGetter = async () => {
     console.log('movieGetter');
