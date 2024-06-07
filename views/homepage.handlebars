@@ -1,5 +1,6 @@
-<div class="row border">
-    <div class="column p-0">
+<section class="row" >
+    {{> sidebar}}
+    <main class="col border">
         <h4>homepage</h4>
         <p>Welcome to the homepage</p>
         
@@ -10,20 +11,8 @@
 
         <div id="content"></div>
             <div class="col-lg-6" id="main-content">      
-        </div>    
-    </div>
-</div>
+        </div>
 
-
-{{!-- {{#each users as |user| }}
-<div class="row align-center mb-5">
-  <div class="col-md-6">
-    <h2>{{{get_emoji}}} {{user.name}}</h2>
-  </div>
-  <div class="col-md-6">
-    <h3><a href="mailto:{{user.email}}">{{user.email}}</a></h3>
-  </div>
-</div>
-{{/each}} --}}
-
+    </main>
+</section>
 <script src="/js/homepage.js"></script>

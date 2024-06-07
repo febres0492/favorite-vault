@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../models');
 const withAuth = require('../utils/auth');
-const { getpage, c } = require('../utils/helpers')
+const { renderPage, c } = require('../utils/helpers')
 
 router.get('/', withAuth, async (req, res) => {
     try {
@@ -44,11 +44,7 @@ router.get('/signup', (req, res) => {
 router.get('/:page', withAuth, async (req, res) => {
     const page = req.params.page;
     console.log(c('route subpage: '), page )
-    getpage({req, res, page})
-    // res.render('homepage' , {
-    //     logged_in: req.session.logged_in,
-    //     user_id: req.session.user_id,
-    // })
+    renderPage({req, res, page})
 })
 
 module.exports = router;
