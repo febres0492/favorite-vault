@@ -1,5 +1,5 @@
-<nav class="d-flex jcsb aic p-2">
-    {{#if logged_in}}
+{{#if logged_in}}
+    <nav class="d-flex jcsb aic p-2">
         <button class="btn btn-sm" onclick="window.location.href='/'" type="button">Home</button>
         <h4>Favorites Vault</h4>
         <div class="dropdown">
@@ -11,5 +11,5 @@
                 <button class="btn btn-sm" id="logout">logout</button>
             </div>
         </div>
-    {{/if}}
-</nav>
+    </nav>
+{{/if}}
