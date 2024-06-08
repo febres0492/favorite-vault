@@ -3,28 +3,61 @@
 // https://api.themoviedb.org/3/search/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27&query=MOVIENAME
 // By genre:]
 // https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27&with_genres=35,53,27
-
-const movieGetter = async () => {
+// genre codes MOVIE
+// Action          28
+// Adventure       12
+// Animation       16
+// Comedy          35
+// Crime           80
+// Documentary     99
+// Drama           18
+// Family          10751
+// Fantasy         14
+// History         36
+// Horror          27
+// Music           10402
+// Mystery         9648
+// Romance         10749
+// Science Fiction 878
+// TV Movie        10770
+// Thriller        53
+// War             10752
+// Western         37
+const movieApiKey = '6a32bb149099b8ab14f8d9eb9434cc27'
+const movieGetter = (e) => {
+    e.preventDefault();
+    const search = document.querySelector('#myInput').value.trim();
+    if(search){
     console.log('movieGetter');
     $.ajax({
-        url: 'https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27',
+        url: `https://api.themoviedb.org/3/search/movie?api_key=${movieApiKey}&query=${search}`,
         method: 'GET'
     }).then((res) => {
         console.log('res', res)
         const items = [...res.results]
         items.forEach(item => {
-        $('#main-content').append(`<div class=" my-5 border">
-            <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" alt="Movie Poster">
-            <h4>${item.original_title}</h4>
-            <button>Favorite</button>
+        
+        $('#movies').append(`
+
+            <br>
+            ${item.original_title}
+            <br>
+            <br>
+            <div class="card">
+            <div  class="row no-gutters">
+            <div class="col-md-4">
+            <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}"  class="card-img" alt="Movie Poster">
+            <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary" id="favorite-btn">Watch movie</a>
+            <a target="_blank"  class="btn btn-secondary" id="favorite-btn">Favorite</a>
+            </div>
+            </div>
 </div>
 `)
         })
-    }).catch(err => console.log(err))
+    }).catch(err => console.log(err))}
 }
 
 
-movieGetter();
 
 function handleUrlParamsMessage() {
     const urlParams = new URLSearchParams(window.location.search)
@@ -58,12 +91,12 @@ for (var i = 0; i < response.items.length; i++) {
   let item = response.items[i];
   let viewUrl = item.volumeInfo.previewLink
   // in production code, item.text should have the HTML entities escap ed.
-  document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title + "<br>" ;
+  document.getElementById("books").innerHTML += "<br>" + item.volumeInfo.title + "<br>" ;
   let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr ;
-  document.getElementById("content").innerHTML += "<br>" +  `<div class="card" style="">
+  document.getElementById("books").innerHTML += "<br>" +  `<div class="card" style="">
    <div class="row no-gutters">
      <div class="col-md-4">
-       <img src="${bookImg1}" class="card-img" alt="...">
+       <img src="${bookImg1}" class="card-img" alt="Book cover">
        <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
        <a target="_blank"  class="btn btn-secondary" id="favorite-btn">Favorite</a>
 
@@ -105,5 +138,21 @@ const savetoFavorites = () =>{
 }
 document
     .querySelector('#search-button')
-    .addEventListener('click', searchFormHandler);
+    .addEventListener('click', (e) => {
+        $('#movies').empty();
+        $('#books').empty();
+        searchFormHandler(e); 
+        movieGetter(e);
+    });
+
+document
+        .querySelector('#myInput')
+        .addEventListener('keydown', (e) => {
+            if(e.key === 'Enter'){
+            $('#movies').empty();
+            $('#books').empty();
+            searchFormHandler(e);
+            movieGetter(e);
+            }
+        });
 // document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
