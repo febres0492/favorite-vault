@@ -18,17 +18,28 @@ function handleDropdown() {
 }
 
 function saveToFavorite(obj) {
+    const requiredKeys = ['itemType', 'itemName', 'itemData']
+
+    // checking if obj has all keys
+    const keys = Object.keys(obj)
+    requiredKeys.forEach(key => {
+        if (!keys.includes(key)) {
+            console.error(`saveToFavorite obj is missing ${key} key`)
+            return
+        }
+    })
+
     $.ajax({
         url: 'api/users/addFavorite',
-        data: { itemType: 'book', itemData: 'this is a test' },
+        data: obj,
         method: 'POST'
     }).then((res) => {
-        console.log('res', res)
+        console.log('saveToFavorite', res)
     }).catch(err => console.log(err))
 }
 
 function getFavorites() {
-    $.ajax({
+    return $.ajax({
         url: 'api/users/getFavorites',
         method: 'GET'
     }).then((res) => {
@@ -37,9 +48,45 @@ function getFavorites() {
     }).catch(err => console.log(err))
 }
 
+function deleteFavorite(btn, id ) {
+    console.log('deleteFavorite', id, btn)
+    $.ajax({
+        url: 'api/users/deleteFavorite',
+        data: { itemId: id},
+        method: 'DELETE'
+    }).then((res) => {
+        btn.closest('.favorite-item').remove()
+    }).catch(err => console.log(err))
+}
+
+function renderFavorites(items) {
+
+    if (!items.length) {
+        $('#main-content')[0].innerHTML = '<h3>No favorites saved</h3>'
+        return
+    }
+
+    const container = $('#main-content')[0]
+    container.innerHTML = ''
+
+    items.forEach(item => {
+        const { id, itemType, itemName, itemData } = item
+        container.innerHTML += `
+            <div class="favorite-item border p-1 mb-1">
+                <h3>${itemName || 'Undefined' }</h3>
+                <p>${itemType}</p>
+                <p>${id}</p>
+                <button onclick="deleteFavorite(this, ${id})">Delete</button>
+            </div>
+        `
+    })
+}
+
 async function handleBtn(btn){
     console.log('button clicked', btn)
-    getFavorites()
+    const items = await getFavorites()
+    console.log('items', items)
+    renderFavorites(items)
 }
 
 // -----------------------------------------------------------
@@ -52,6 +99,9 @@ let placeHldr = '<img src="https://via.placeholder.com/150">';
        
 function handleResponse(response) {
 
+    const container = document.getElementById('main-content')
+    container.innerHTML = ''
+
     for (var i = 0; i < response.items.length; i++) {
         let item = response.items[i];
         let viewUrl = item.volumeInfo.previewLink
@@ -59,7 +109,7 @@ function handleResponse(response) {
         //favorites link
 
         let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
-        document.getElementById("content").innerHTML += `
+        container.innerHTML += `
             <div class="col-md-4">
                 <div class="card" style="">
                     <h3>${item.volumeInfo.title}</h3>
@@ -71,27 +121,18 @@ function handleResponse(response) {
         `
     }
 
-    const savetoFavorites = () => {
-        console.log("This link will be saved to favorites")
-        //Save the link to the database
-
-    }
-
     const fav_button = [...document.querySelectorAll('.result-item')]
 
     fav_button.forEach(btn => {
         btn.addEventListener('click', () => {
 
             console.log($(btn).closest('.card'))
-            
-            $.ajax({
-                url: 'api/users/addFavorite',
-                data: { itemType: 'book', itemName: 'test name', itemData: JSON.stringify({name: 'test name', values: [1,2,3,4,'5','6']}) },
-                method: 'POST'
-            }).then((res) => {
-                console.log('res', res)
-
-            }).catch(err => console.log(err))
+            const itemName = $(btn).closest('.card').find('h3').text()
+            saveToFavorite({
+                itemType: 'book',
+                itemName: itemName,
+                itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] })
+            })
         })
     })
 }

@@ -109,10 +109,11 @@ router.get('/getFavorites', async (req, res) => {
 
 // deleting user's favorite
 router.delete('/deleteFavorite', async (req, res) => {
+    console.log(c('testing deleteFavorite route'))
     try {
         const userId = req.session.user_id
         const itemId = req.body.itemId
-        const deleted = await Favorites.deleteOne({ userId: userId, _id: itemId })
+        const deleted = await Favorites.destroy({ where: { userId: userId, id: itemId } })
         res.status(200).json(deleted)
     } catch (err) {
         console.log('err', err)
