@@ -1,3 +1,4 @@
+
 function handleUrlParamsMessage() {
     const urlParams = new URLSearchParams(window.location.search)
     const message = urlParams.get('msg')
@@ -16,6 +17,31 @@ function handleDropdown() {
     })
 }
 
+function saveToFavorite(obj) {
+    $.ajax({
+        url: 'api/users/addFavorite',
+        data: { itemType: 'book', itemData: 'this is a test' },
+        method: 'POST'
+    }).then((res) => {
+        console.log('res', res)
+    }).catch(err => console.log(err))
+}
+
+function getFavorites() {
+    $.ajax({
+        url: 'api/users/getFavorites',
+        method: 'GET'
+    }).then((res) => {
+        console.log('getFavorites', res)
+        return res
+    }).catch(err => console.log(err))
+}
+
+async function handleBtn(btn){
+    console.log('button clicked', btn)
+    getFavorites()
+}
+
 // -----------------------------------------------------------
 
 const B_APIKEY = 'AIzaSyDPW7iG7UbDW8ap3Zkzsk72KuLSEw5AlRA'
@@ -25,23 +51,49 @@ const B_APIKEY = 'AIzaSyDPW7iG7UbDW8ap3Zkzsk72KuLSEw5AlRA'
 let placeHldr = '<img src="https://via.placeholder.com/150">';
        
 function handleResponse(response) {
- 
-for (var i = 0; i < response.items.length; i++) {
-  let item = response.items[i];
-  let viewUrl = item.volumeInfo.previewLink
-  // in production code, item.text should have the HTML entities escap ed.
-  document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title + "<br>" ;
-  let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr ;
-  document.getElementById("content").innerHTML += "<br>" +  `<div class="card" style="">
-   <div class="row no-gutters">
-     <div class="col-md-4">
-       <img src="${bookImg1}" class="card-img" alt="...">
-       <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
-       <a target="_blank"  class="btn btn-secondary" id="favorite-btn">Favorite</a>
 
-     </div>`
- 
-}
+    for (var i = 0; i < response.items.length; i++) {
+        let item = response.items[i];
+        let viewUrl = item.volumeInfo.previewLink
+        // in production code, item.text should have the HTML entities escap ed.
+        //favorites link
+
+        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
+        document.getElementById("content").innerHTML += `
+            <div class="col-md-4">
+                <div class="card" style="">
+                    <h3>${item.volumeInfo.title}</h3>
+                    <img src="${bookImg1}" class="card-img" alt="...">
+                    <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
+                    <button class="btn btn-secondary result-item" >Favorite</button> 
+                </div>
+            </div>
+        `
+    }
+
+    const savetoFavorites = () => {
+        console.log("This link will be saved to favorites")
+        //Save the link to the database
+
+    }
+
+    const fav_button = [...document.querySelectorAll('.result-item')]
+
+    fav_button.forEach(btn => {
+        btn.addEventListener('click', () => {
+
+            console.log($(btn).closest('.card'))
+            
+            $.ajax({
+                url: 'api/users/addFavorite',
+                data: { itemType: 'book', itemName: 'test name', itemData: JSON.stringify({name: 'test name', values: [1,2,3,4,'5','6']}) },
+                method: 'POST'
+            }).then((res) => {
+                console.log('res', res)
+
+            }).catch(err => console.log(err))
+        })
+    })
 }
 
 
@@ -68,16 +120,6 @@ const searchFormHandler = async (event) => {
 };
 
 
-const savetoFavorites = () =>{
-    console.log("This link will be saved to favorites")
-    //Save the link to the database
-
-
-
-}
 document
     .querySelector('#search-button')
     .addEventListener('click', searchFormHandler);
-document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
-
- 

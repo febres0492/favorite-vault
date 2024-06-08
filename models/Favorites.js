@@ -18,7 +18,19 @@ Favorites.init(
                 model: 'user',
                 key: 'id',
             }
-        }
+        },
+        itemName: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        itemType: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        itemData: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
     },
     {
         sequelize,
