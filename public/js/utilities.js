@@ -24,13 +24,8 @@
 // War             10752
 // Western         37
 
+// function to generate the movie cards
 const movieGetter = async (res) => {
-    // e.preventDefault();
-    try{
-    // const search = document.querySelector('#myInput').value.trim();
-    // const res = await $.ajax({ 
-    //                 url: `http://localhost:3004/api/external/${search}`,
-    //                 method:'Get'})
     const items = [...res.results]
     
     items.forEach(item => {
@@ -43,9 +38,6 @@ const movieGetter = async (res) => {
                 <button class="btn btn-secondary result-item">Favorite</button>
             </div>
         </div>`)})
-            }catch(err){
-                showMessageInModal(err)
-    }
 }
 
 
@@ -189,39 +181,21 @@ function handleResponse(response) {
 }
 
 
-
-// let input = document.getElementById("myInput");
-// let inputValue = input.value;
-// let source = `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&callback=handleResponse`
-
-// const searchFormHandler = async (event) => {
-//     event.preventDefault();
-//     console.log('This is my API Key (not telling)' )
-//     const search = document.querySelector('#myInput').value.trim();
-    
-//     if (search ) {
-//         const request = await fetch(`http://localhost:3004/api/external/book/${search}`, {
-//             method: 'GET',
-//             headers: { 'Content-Type': 'application/json' },
-//         });
-//         myResponse =  await request.json()
-//         console.log(myResponse)
-//         handleResponse(myResponse)
-//     }   
-   
-// };
-
 // Function to handle a search
 const searcher = async () =>{
-    $('#movies').empty();
-    $('#books').empty();
-const search = document.querySelector('#myInput').value.trim();
-if(search){
-        const {movieData, bookData} = await $.ajax({ 
-                            url: `http://localhost:3004/api/external/${search}`,
-                            method:'Get'})
-            handleResponse(bookData); 
-            movieGetter(movieData);}
+    try {
+        $('#movies').empty();
+        $('#books').empty();
+    const search = document.querySelector('#myInput').value.trim();
+    if(search){
+            const {movieData, bookData} = await $.ajax({ 
+                                url: `http://localhost:3004/api/external/${search}`,
+                                method:'Get'})
+                handleResponse(bookData); 
+                movieGetter(movieData);}
+    } catch (err) {
+        showMessageInModal(err)
+    }
 }
 
 // Wait for the document to be fully loaded before adding event listeners
@@ -238,4 +212,4 @@ document
                 searcher();
         }});
 // document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
-    })
+})
