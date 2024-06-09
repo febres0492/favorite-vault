@@ -1,8 +1,8 @@
-// https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27
+// https://api.themoviedb.org/3/discover/movie?api_key=
 // movie name:
-// https://api.themoviedb.org/3/search/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27&query=MOVIENAME
+// https://api.themoviedb.org/3/search/movie?api_key=&query=MOVIENAME
 // By genre:]
-// https://api.themoviedb.org/3/discover/movie?api_key=6a32bb149099b8ab14f8d9eb9434cc27&with_genres=35,53,27
+// https://api.themoviedb.org/3/discover/movie?api_key=&with_genres=35,53,27
 // genre codes MOVIE
 // Action          28
 // Adventure       12
@@ -23,32 +23,29 @@
 // Thriller        53
 // War             10752
 // Western         37
-const movieApiKey = '6a32bb149099b8ab14f8d9eb9434cc27'
-const movieGetter = (e) => {
+
+const movieGetter = async (e) => {
     e.preventDefault();
+    try{
     const search = document.querySelector('#myInput').value.trim();
-    if(search){
-    console.log('movieGetter');
-    $.ajax({
-        url: `https://api.themoviedb.org/3/search/movie?api_key=${movieApiKey}&query=${search}`,
-        method: 'GET'
-    }).then((res) => {
-        console.log('res', res)
-        const items = [...res.results]
-        items.forEach(item => {
-        
-        $('#movies').append(`
-    <div class="col-md-5">
-        <div class="card">
-            <h3>${item.original_title}</h3>
-            <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
-            <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary">Watch Movie</a>
-            <button class="btn btn-secondary result-item">Favorite</button>
-        </div>
-    </div>
-`)
-        })
-    }).catch(err => console.log(err))}
+    const res = await $.ajax({ 
+                    url: `http://localhost:3004/api/external/${search}`,
+                    method:'Get'})
+    const items = [...res.results]
+    
+    items.forEach(item => {
+            $('#movies').append(`
+        <div class="col-md-5">
+            <div class="card">
+                <h3>${item.original_title}</h3>
+                <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
+                <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary">Watch Movie</a>
+                <button class="btn btn-secondary result-item">Favorite</button>
+            </div>
+        </div>`)})
+            }catch(err){
+                showMessageInModal(err)
+    }
 }
 
 
@@ -58,7 +55,7 @@ function handleUrlParamsMessage() {
     const message = urlParams.get('msg')
 
     if (message == 0) {
-        window.alert('Page not found! Redirecting to homepage...')
+        showMessageInModal('Page not found! Redirecting to homepage...')
     }
 }
 
@@ -145,7 +142,7 @@ async function handleBtn(btn){
 
 // -----------------------------------------------------------
 
-const B_APIKEY = 'AIzaSyDPW7iG7UbDW8ap3Zkzsk72KuLSEw5AlRA'
+
 
 //Create functions for google books apis
 
@@ -199,11 +196,11 @@ function handleResponse(response) {
 
 const searchFormHandler = async (event) => {
     event.preventDefault();
-    console.log('This is my API Key' + B_APIKEY)
+    console.log('This is my API Key (not telling)' )
     const search = document.querySelector('#myInput').value.trim();
     
     if (search ) {
-        const request = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${search}&key=${B_APIKEY}`, {
+        const request = await fetch(`http://localhost:3004/api/external/book/${search}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
