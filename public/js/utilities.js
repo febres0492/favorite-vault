@@ -38,20 +38,14 @@ const movieGetter = (e) => {
         items.forEach(item => {
         
         $('#movies').append(`
-
-            <br>
-            ${item.original_title}
-            <br>
-            <br>
-            <div class="card">
-            <div  class="row no-gutters">
-            <div class="col-md-4">
-            <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}"  class="card-img" alt="Movie Poster">
-            <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary" id="favorite-btn">Watch movie</a>
-            <a target="_blank"  class="btn btn-secondary" id="favorite-btn">Favorite</a>
-            </div>
-            </div>
-</div>
+    <div class="col-md-5">
+        <div class="card">
+            <h3>${item.original_title}</h3>
+            <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
+            <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary">Watch Movie</a>
+            <button class="btn btn-secondary result-item">Favorite</button>
+        </div>
+    </div>
 `)
         })
     }).catch(err => console.log(err))}
@@ -159,7 +153,7 @@ let placeHldr = '<img src="https://via.placeholder.com/150">';
        
 function handleResponse(response) {
 
-    const container = document.getElementById('main-content')
+    const container = document.getElementById('books')
     container.innerHTML = ''
 
     for (var i = 0; i < response.items.length; i++) {
@@ -170,10 +164,10 @@ function handleResponse(response) {
 
         let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
         container.innerHTML += `
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card" style="">
                     <h3>${item.volumeInfo.title}</h3>
-                    <img src="${bookImg1}" class="card-img" alt="...">
+                    <img src="${bookImg1}" class="card-img" alt="Book cover">
                     <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
                     <button class="btn btn-secondary result-item" >Favorite</button> 
                 </div>

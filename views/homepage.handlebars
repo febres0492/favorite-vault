@@ -1,17 +1,25 @@
-
-<section class="container-fluid p-0" >
+<section class="container-fluid p-0">
     <div class="row">
         {{> sidebar}}
         <main class="col border">
             <h4>homepage</h4>
             <p>Welcome to the homepage</p>
-            
-            <form class="form search-form" >
+
+            <form class="form search-form">
                 <input type="text" placeholder="Search for a book..." name="search" id="myInput" value="Valkiry">
                 <button type="button" id="search-button">search</i></button>
             </form>
 
-            <div class="col" id="main-content">      
+            <div id="main-content" class="row">
+                <div class="col-lg-6">
+                    <h3>Books</h3>
+                    <div id="books"></div>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Movies</h3>
+                    <div id="movies"></div>
+                </div>
+            </div>
         </main>
 
     </div>
