@@ -24,13 +24,13 @@
 // War             10752
 // Western         37
 
-const movieGetter = async (e) => {
-    e.preventDefault();
+const movieGetter = async (res) => {
+    // e.preventDefault();
     try{
-    const search = document.querySelector('#myInput').value.trim();
-    const res = await $.ajax({ 
-                    url: `http://localhost:3004/api/external/${search}`,
-                    method:'Get'})
+    // const search = document.querySelector('#myInput').value.trim();
+    // const res = await $.ajax({ 
+    //                 url: `http://localhost:3004/api/external/${search}`,
+    //                 method:'Get'})
     const items = [...res.results]
     
     items.forEach(item => {
@@ -194,41 +194,48 @@ function handleResponse(response) {
 // let inputValue = input.value;
 // let source = `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&callback=handleResponse`
 
-const searchFormHandler = async (event) => {
-    event.preventDefault();
-    console.log('This is my API Key (not telling)' )
-    const search = document.querySelector('#myInput').value.trim();
+// const searchFormHandler = async (event) => {
+//     event.preventDefault();
+//     console.log('This is my API Key (not telling)' )
+//     const search = document.querySelector('#myInput').value.trim();
     
-    if (search ) {
-        const request = await fetch(`http://localhost:3004/api/external/book/${search}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        });
-        myResponse =  await request.json()
-        console.log(myResponse)
-        handleResponse(myResponse)
-    }   
+//     if (search ) {
+//         const request = await fetch(`http://localhost:3004/api/external/book/${search}`, {
+//             method: 'GET',
+//             headers: { 'Content-Type': 'application/json' },
+//         });
+//         myResponse =  await request.json()
+//         console.log(myResponse)
+//         handleResponse(myResponse)
+//     }   
    
-};
+// };
 
+// Function to handle a search
+const searcher = async () =>{
+    $('#movies').empty();
+    $('#books').empty();
+const search = document.querySelector('#myInput').value.trim();
+if(search){
+        const {movieData, bookData} = await $.ajax({ 
+                            url: `http://localhost:3004/api/external/${search}`,
+                            method:'Get'})
+            handleResponse(bookData); 
+            movieGetter(movieData);}
+}
 
+// Wait for the document to be fully loaded before adding event listeners
+$(document).ready(() => {
 document
     .querySelector('#search-button')
-    .addEventListener('click', (e) => {
-        $('#movies').empty();
-        $('#books').empty();
-        searchFormHandler(e); 
-        movieGetter(e);
-    });
+    .addEventListener('click', searcher);
 
 document
         .querySelector('#myInput')
-        .addEventListener('keydown', (e) => {
+        .addEventListener('keydown', async (e) => {
             if(e.key === 'Enter'){
-            $('#movies').empty();
-            $('#books').empty();
-            searchFormHandler(e);
-            movieGetter(e);
-            }
-        });
+                e.preventDefault();
+                searcher();
+        }});
 // document.querySelector('#favorite-btn').addEventListener('click', savetoFavorites);
+    })
