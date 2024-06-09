@@ -7,7 +7,7 @@ function c(str='null', color = 'g'){
 
 module.exports = {
 
-    getpage: async (obj) => {
+    renderPage: async (obj) => {
         let {req, res, page } = obj
         const pageList = ['homepage','user_settings']
         page = pageList.indexOf(page) > -1 ? page : 'homepage'
@@ -19,6 +19,7 @@ module.exports = {
             logged_in: req.session.logged_in,
             user_id: req.session.user_id,
             currUser: req.session.currUser,
+            page: page,
             message: message
         })
     },

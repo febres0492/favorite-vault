@@ -1,35 +1,19 @@
-<div class="row border">
-    <div class="column p-0 align-items-center d-flex flex-column justify-content-center">
-        <h4 class="text-center">homepage</h4>
-        <p class="text-center">Welcome to the homepage</p>
-        
-        <form class="form search-form d-flex justify-content-center" action="action_page.php">
-            <input type="text" placeholder="Search for a book..." name="search" id="myInput">
-            <button type="button" id="search-button"><i class="fa fa-search"  ></i></button>
-        </form>
 
-      <div id="content" class="row">
-        <div class="col-lg-6">
-          <h3>Books</h3>
-          <div id="books"></div>
-          </div>
-        <div class="col-lg-6">
-          <h3>Movies</h3>
-          <div  id="movies"></div>
-          </div>
-      </div>   
+<section class="container-fluid p-0" >
+    <div class="row">
+        {{> sidebar}}
+        <main class="col border">
+            <h4>homepage</h4>
+            <p>Welcome to the homepage</p>
+            
+            <form class="form search-form" >
+                <input type="text" placeholder="Search for a book..." name="search" id="myInput" value="Valkiry">
+                <button type="button" id="search-button">search</i></button>
+            </form>
+
+            <div class="col" id="main-content">      
+        </main>
+
     </div>
-</div>
-
-{{!-- {{#each users as |user| }}
-<div class="row align-center mb-5">
-  <div class="col-md-6">
-    <h2>{{{get_emoji}}} {{user.name}}</h2>
-  </div>
-  <div class="col-md-6">
-    <h3><a href="mailto:{{user.email}}">{{user.email}}</a></h3>
-  </div>
-</div>
-{{/each}} --}}
-
+</section>
 <script src="/js/homepage.js"></script>

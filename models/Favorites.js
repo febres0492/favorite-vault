@@ -9,11 +9,28 @@ Favorites.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true,
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
                 model: 'user',
                 key: 'id',
             }
-        }
+        },
+        itemName: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        itemType: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        itemData: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
     },
     {
         sequelize,
