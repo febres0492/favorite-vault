@@ -14,9 +14,10 @@ const loginFormHandler = async (event) => {
         if (response.ok) {
             document.location.replace('/');
         } else {
-            alert('Failed to log in');
+            showMessageInModal('Failed to log in');
         }
     }
+    else {showMessageInModal('Make sure to fill the form');}
 };
 
 document
