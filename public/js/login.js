@@ -14,7 +14,7 @@ const loginFormHandler = async (event) => {
         if (response.ok) {
             document.location.replace('/');
         } else {
-            showMessageInModal('Failed to log in');
+            showMessageInModal('Incorrect username or password');
         }
     }
     else {showMessageInModal('Make sure to fill the form');}

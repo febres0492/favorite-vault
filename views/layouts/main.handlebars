@@ -15,14 +15,13 @@
 <body>
     <header class="container-fluid">
         {{> navbar}}
-        {{> modal}}
     </header>
     <main class="container-fluid p-0">
         {{{ body }}}
     </main>
     <footer>
-
     </footer>
+        {{> modal}}
 
 
     {{#if logged_in}}
