@@ -142,7 +142,7 @@ let placeHldr = '<img src="https://via.placeholder.com/150">';
        
 function handleResponse(response) {
 
-    const container = document.getElementById('books')
+    const container = document.getElementById('books');
     container.innerHTML = ''
 
     for (var i = 0; i < response.items.length; i++) {
@@ -184,8 +184,15 @@ function handleResponse(response) {
 // Function to handle a search
 const searcher = async () =>{
     try {
-        $('#movies').empty();
-        $('#books').empty();
+        $('#main-content').empty();
+        $('#main-content').html(`<div class="col-lg-6">
+                    <h3>Books</h3>
+                    <div id="books"></div>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Movies</h3>
+                    <div id="movies"></div>
+                </div>`)
     const search = document.querySelector('#myInput').value.trim();
     if(search){
             const {movieData, bookData} = await $.ajax({ 
