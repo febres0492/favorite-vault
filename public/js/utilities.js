@@ -41,13 +41,16 @@ const movieGetter = async (res) => {
 }
 
 
-function saveItem(element, type) {
+function saveItem (element, type) {
     console.log(element, type);
     const itemName = $(element).closest('.card').find('h3').text();
+    const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
+    console.log(imgUrl);
     saveToFavorite({
         itemType: type,
         itemName: itemName,
-        itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] })
+        itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] }),
+        itemImg: imgUrl
     })
 }
 
@@ -108,6 +111,7 @@ function renderFavorites(items) {
         container.innerHTML += `
             <div class="favorite-item border p-1 mb-1">
                 <h3>${itemName || 'Undefined' }</h3>
+                <img src = "${item.itemImg} "> 
                 <p>${itemType}</p>
                 <p>${id}</p>
                 <button onclick="deleteFavorite(this, ${id})">Delete</button>

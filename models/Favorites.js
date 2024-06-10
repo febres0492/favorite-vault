@@ -31,6 +31,10 @@ Favorites.init(
             type: DataTypes.STRING,
             allowNull: false
         },
+        itemImg:{
+            type: DataTypes.STRING,
+            allowNull:true,
+        }
     },
     {
         sequelize,
