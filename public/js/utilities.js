@@ -35,30 +35,21 @@ const movieGetter = async (res) => {
                 <h3>${item.original_title}</h3>
                 <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
                 <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary">Watch Movie</a>
-                <button class="btn btn-secondary result-item">Favorite</button>
+                <button class="btn btn-secondary result-item" onclick = "saveItem(this,'movie')">Favorite</button>
             </div>
         </div>`)})
 }
 
 
-
-// function handleUrlParamsMessage() {
-//     const urlParams = new URLSearchParams(window.location.search)
-//     const message = urlParams.get('msg')
-
-//     if (message == 0) {
-//         showMessageInModal('Page not found! Redirecting to homepage...')
-//     }
-// }
-
-// function handleDropdown() {
-//     const dropdown = [...document.querySelectorAll('.dropdown')]
-//     dropdown.forEach(item => {
-//         item.addEventListener('click', () => {
-//             item.querySelector('.dropdown-menu').classList.toggle('show-dropdown')
-//         })
-//     })
-// }
+function saveItem(element, type) {
+    console.log(element, type);
+    const itemName = $(element).closest('.card').find('h3').text();
+    saveToFavorite({
+        itemType: type,
+        itemName: itemName,
+        itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] })
+    })
+}
 
 function saveToFavorite(obj) {
     const requiredKeys = ['itemType', 'itemName', 'itemData']
@@ -158,26 +149,11 @@ function handleResponse(response) {
                     <h3>${item.volumeInfo.title}</h3>
                     <img src="${bookImg1}" class="card-img" alt="Book cover">
                     <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
-                    <button class="btn btn-secondary result-item" >Favorite</button> 
+                    <button class="btn btn-secondary result-item" onclick = "saveItem(this,'book')">Favorite</button> 
                 </div>
             </div>
         `
     }
-
-    const fav_button = [...document.querySelectorAll('.result-item')]
-
-    fav_button.forEach(btn => {
-        btn.addEventListener('click', () => {
-
-            console.log($(btn).closest('.card'))
-            const itemName = $(btn).closest('.card').find('h3').text()
-            saveToFavorite({
-                itemType: 'book',
-                itemName: itemName,
-                itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] })
-            })
-        })
-    })
 }
 
 
