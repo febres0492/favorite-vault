@@ -9,7 +9,7 @@ $('#signup-form').on('submit', function(event) {
     const repeatPassword = $('#repeat-password-signup').val().trim()
 
 
-    // if(name && lastname && email && password && repeatPassword){
+
     if (password !== repeatPassword) {
         showMessageInModal('Passwords do not match')
         return
@@ -30,5 +30,4 @@ $('#signup-form').on('submit', function(event) {
             }
         })
     }
-// } else {showMessageInModal('Make sure to fill the form')}
 })

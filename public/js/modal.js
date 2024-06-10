@@ -1,5 +1,5 @@
 function showMessageInModal(message) {
-    var modalBody = document.querySelector('.modal-body');
+    var modalBody = document.querySelector('.message');
 
     modalBody.textContent = message;
 

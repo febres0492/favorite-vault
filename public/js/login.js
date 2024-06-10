@@ -17,7 +17,6 @@ const loginFormHandler = async (event) => {
             showMessageInModal('Incorrect username or password');
         }
     }
-    else {showMessageInModal('Make sure to fill the form');}
 };
 
 document
