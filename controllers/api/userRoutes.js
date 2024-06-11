@@ -99,7 +99,7 @@ router.get('/getFavorites', async (req, res) => {
     console.log(c('testing getFavorites route'))
     try {
         const userId = req.session.user_id
-        const favorites = await Favorites.findAll({ userId: userId })
+        const favorites = await Favorites.findAll({ where: {userId: userId} })
         res.status(200).json(favorites)
     } catch (err) {
         console.log('err', err)
