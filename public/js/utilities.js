@@ -28,7 +28,6 @@
 // function to generate the movie cards
 const movieGetter = async (res) => {
     const items = [...res.results]
-    console.log(items);
     items.forEach(item => {
             $('#movies').append(`
         <div class="col-md-5">
@@ -68,7 +67,7 @@ function saveToFavorite(obj) {
     })
 
     $.ajax({
-        url: 'api/users/addFavorite',
+        url: 'api/favorite/addFavorite',
         data: obj,
         method: 'POST'
     }).then((res) => {
@@ -78,7 +77,7 @@ function saveToFavorite(obj) {
 
 function getFavorites() {
     return $.ajax({
-        url: 'api/users/getFavorites',
+        url: 'api/favorite/getFavorites',
         method: 'GET'
     }).then((res) => {
         console.log('getFavorites', res)
@@ -89,7 +88,7 @@ function getFavorites() {
 function deleteFavorite(btn, id ) {
     console.log('deleteFavorite', id, btn)
     $.ajax({
-        url: 'api/users/deleteFavorite',
+        url: 'api/favorite/deleteFavorite',
         data: { itemId: id},
         method: 'DELETE'
     }).then((res) => {
@@ -177,7 +176,7 @@ const searcher = async () =>{
     const search = document.querySelector('#myInput').value.trim();
     if(search){
             const {movieData, bookData} = await $.ajax({ 
-                                url: `http://localhost:3004/api/external/${search}`,
+                                url: `/api/external/${search}`,
                                 method:'Get'})
                 handleResponse(bookData); 
                 movieGetter(movieData);}
