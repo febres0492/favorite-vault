@@ -81,7 +81,7 @@ router.post('/addFavorite', async (req, res) => {
 
     try {
         const item = {
-            userId: req.session.user_id,
+            userId: req.session.user_Id,
             itemType: req.body.itemType,
             itemData: req.body.itemData,
         }
