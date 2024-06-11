@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/jass.css">
     <link rel="stylesheet" href="/css/general-style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>User Registry</title>
 </head>
@@ -15,17 +16,17 @@
     <header class="container-fluid">
         {{> navbar}}
     </header>
-    <main class="">
+    <main class="container-fluid p-0">
         {{{ body }}}
     </main>
-    <footer>
 
-    </footer>
-
+    {{> modal}}
 
     {{#if logged_in}}
         <script src="/js/logout.js"></script>
     {{/if}}
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="/js/utilities.js"></script>
     <script src="/js/main.js"></script>
 

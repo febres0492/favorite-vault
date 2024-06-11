@@ -1,19 +1,81 @@
+// https://api.themoviedb.org/3/discover/movie?api_key=
+// movie name:
+// https://api.themoviedb.org/3/search/movie?api_key=&query=MOVIENAME
+// By genre:]
+// https://api.themoviedb.org/3/discover/movie?api_key=&with_genres=35,53,27
+// genre codes MOVIE
+// Action          28
+// Adventure       12
+// Animation       16
+// Comedy          35
+// Crime           80
+// Documentary     99
+// Drama           18
+// Family          10751
+// Fantasy         14
+// History         36
+// Horror          27
+// Music           10402
+// Mystery         9648
+// Romance         10749
+// Science Fiction 878
+// TV Movie        10770
+// Thriller        53
+// War             10752
+// Western         37
 
-function handleUrlParamsMessage() {
-    const urlParams = new URLSearchParams(window.location.search)
-    const message = urlParams.get('msg')
 
-    if (message == 0) {
-        window.alert('Page not found! Redirecting to homepage...')
+// function to generate the movie cards
+function renderMovies  (res)  {
+    const items = [...res.results]
+    items.forEach(item => {
+        $('#movies').append(`
+            <div class="col-md-6">
+                <div class="card">
+                    <h3>${item.title}</h3>
+                    <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
+                    <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
+                    <button class="btn btn-secondary result-item" onclick = "saveItem(this,'movie')">Favorite</button>
+                </div>
+            </div>
+        `)
+    })
+}
+
+function renderBooks(response) {
+
+    const container = document.getElementById('books')
+    container.innerHTML = ''
+    let placeHldr = 'https://via.placeholder.com/150'
+
+    for (var i = 0; i < response.items.length; i++) {
+        let item = response.items[i]
+        let viewUrl = item.volumeInfo.previewLink
+
+        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
+        container.innerHTML += `
+            <div class="col-md-6">
+                <div class="card" style="">
+                    <h3>${item.volumeInfo.title}</h3>
+                    <img src="${bookImg1}" class="card-img" alt="Book cover">
+                    <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
+                    <button class="btn btn-secondary result-item" onclick = "saveItem(this,'book')">Favorite</button> 
+                </div>
+            </div>
+        `
     }
 }
 
-function handleDropdown() {
-    const dropdown = [...document.querySelectorAll('.dropdown')]
-    dropdown.forEach(item => {
-        item.addEventListener('click', () => {
-            item.querySelector('.dropdown-menu').classList.toggle('show-dropdown')
-        })
+function saveItem (element, type) {
+    console.log(element, type);
+    const itemName = $(element).closest('.card').find('h3').text();
+    const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
+    console.log(imgUrl);
+    saveToFavorite({
+        itemType: type,
+        itemName: itemName,
+        itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] }),
+        itemImg: imgUrl
     })
 }
 
@@ -74,6 +136,7 @@ function renderFavorites(items) {
         container.innerHTML += `
             <div class="favorite-item border p-1 mb-1">
                 <h3>${itemName || 'Undefined' }</h3>
+                <img src = "${item.itemImg} "> 
                 <p>${itemType}</p>
                 <p>${id}</p>
                 <button onclick="deleteFavorite(this, ${id})">Delete</button>
@@ -89,78 +152,51 @@ async function handleBtn(btn){
     renderFavorites(items)
 }
 
-// -----------------------------------------------------------
-
-const B_APIKEY = 'AIzaSyDPW7iG7UbDW8ap3Zkzsk72KuLSEw5AlRA'
-
-//Create functions for google books apis
-
-let placeHldr = '<img src="https://via.placeholder.com/150">';
-       
-function handleResponse(response) {
-
-    const container = document.getElementById('main-content')
-    container.innerHTML = ''
-
-    for (var i = 0; i < response.items.length; i++) {
-        let item = response.items[i];
-        let viewUrl = item.volumeInfo.previewLink
-        // in production code, item.text should have the HTML entities escap ed.
-        //favorites link
-
-        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
-        container.innerHTML += `
-            <div class="col-md-4">
-                <div class="card" style="">
-                    <h3>${item.volumeInfo.title}</h3>
-                    <img src="${bookImg1}" class="card-img" alt="...">
-                    <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
-                    <button class="btn btn-secondary result-item" >Favorite</button> 
-                </div>
+async function searcher(queryParams) {
+    try {
+        $('#main-content').empty();
+        $('#main-content').html(`
+            <div class="col-lg-6">
+                <h3>Books</h3>
+                <div id="books"></div>
             </div>
-        `
-    }
-
-    const fav_button = [...document.querySelectorAll('.result-item')]
-
-    fav_button.forEach(btn => {
-        btn.addEventListener('click', () => {
-
-            console.log($(btn).closest('.card'))
-            const itemName = $(btn).closest('.card').find('h3').text()
-            saveToFavorite({
-                itemType: 'book',
-                itemName: itemName,
-                itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] })
+            <div class="col-lg-6">
+                <h3>Movies</h3>
+                <div id="movies"></div>
+            </div>
+        `)
+        
+        if (queryParams) {
+            const { movieData, bookData } = await $.ajax({
+                url: 'api/external',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ query: queryParams.trim() })
             })
-        })
-    })
+            renderBooks(bookData)
+            renderMovies(movieData)
+        }
+    } catch (err) {
+        showMessageInModal(err)
+    }
 }
 
+function searchInput(e) {
+    e.preventDefault()
+    const query = document.querySelector('#searchBar').value
+    if (e.key && e.key === 'Enter') { 
+        searcher(query)
+    }
+}
 
+function searchBtn(e) {
+    e.preventDefault()
+    const query = document.querySelector('#searchBar').value
+    searcher(query)
+}
 
-// let input = document.getElementById("myInput");
-// let inputValue = input.value;
-// let source = `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&callback=handleResponse`
-
-const searchFormHandler = async (event) => {
-    event.preventDefault();
-    console.log('This is my API Key' + B_APIKEY)
-    const search = document.querySelector('#myInput').value.trim();
-    
-    if (search ) {
-        const request = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${search}&key=${B_APIKEY}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        });
-        myResponse =  await request.json()
-        console.log(myResponse)
-        handleResponse(myResponse)
-    }   
-   
-};
-
-
-document
-    .querySelector('#search-button')
-    .addEventListener('click', searchFormHandler);
+function showMessageInModal(message) {
+    const modalBody = document.querySelector('.message');
+    modalBody.textContent = message;
+    $('#exampleModal').modal('show'); 
+}
