@@ -96,10 +96,10 @@ router.post('/addFavorite', async (req, res) => {
 
 // getting user's favorites
 router.get('/getFavorites', async (req, res) => {
-    console.log(c('testing getFavorites route'))
     try {
         const userId = req.session.user_id
-        const favorites = await Favorites.findAll({ userId: userId })
+        const favorites = await Favorites.findAll({ where: {userId: userId} })
+        console.log(favorites);
         res.status(200).json(favorites)
     } catch (err) {
         console.log('err', err)

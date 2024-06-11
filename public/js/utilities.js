@@ -24,17 +24,18 @@
 // War             10752
 // Western         37
 
+
 // function to generate the movie cards
 const movieGetter = async (res) => {
     const items = [...res.results]
-    
+    console.log(items);
     items.forEach(item => {
             $('#movies').append(`
         <div class="col-md-5">
             <div class="card">
-                <h3>${item.original_title}</h3>
+                <h3>${item.title}</h3>
                 <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
-                <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.original_title}" class="btn btn-secondary">Watch Movie</a>
+                <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
                 <button class="btn btn-secondary result-item" onclick = "saveItem(this,'movie')">Favorite</button>
             </div>
         </div>`)})
