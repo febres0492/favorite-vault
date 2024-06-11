@@ -77,15 +77,44 @@ router.post('/signup', async (req, res) => {
 
 //addding item to user's favorites
 router.post('/addFavorite', async (req, res) => {
+
     try {
         const item = {
             userId: req.session.user_id,
-            itemType: req.body.itemType,
-            itemData: req.body.itemData,
+            ...req.body
         }
+        console.log(c('item'), item)
+
         const fabItem = await Favorites.create(item)
         res.status(200).json(fabItem)
 
+    } catch (err) {
+        console.log('err', err)
+        res.status(400).json(err)
+    }
+})
+
+// getting user's favorites
+router.get('/getFavorites', async (req, res) => {
+    console.log(c('testing getFavorites route'))
+    try {
+        const userId = req.session.user_id
+        const favorites = await Favorites.findAll({ userId: userId })
+        res.status(200).json(favorites)
+    } catch (err) {
+        console.log('err', err)
+        res.status(400).json(err)
+    }
+})
+
+// deleting user's favorite
+router.delete('/deleteFavorite', async (req, res) => {
+    console.log(c('testing deleteFavorite route'))
+    try {
+        const userId = req.session.user_id
+        const itemId = req.body.itemId
+        const deleted = await Favorites.destroy({ where: { userId: userId, id: itemId } })
+        res.status(200).json(deleted)
     } catch (err) {
         console.log('err', err)
         res.status(400).json(err)
