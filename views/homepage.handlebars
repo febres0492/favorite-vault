@@ -6,8 +6,11 @@
             <p>Welcome to the homepage</p>
 
             <form class="form search-form">
-                <input type="text" placeholder="Search for a book..." name="search" id="myInput" value="Valkiry">
-                <button type="button" id="search-button">search</i></button>
+                <input id="searchBar" type="text" name="search"  
+                    placeholder="Search for Movies or Books ..." onkeydown="searchInput(event)"
+                    value="liar game"
+                >
+                <button type="button" id="search-button" onclick="searchBtn(event)">search</i></button>
             </form>
 
             <div id="main-content" class="row">

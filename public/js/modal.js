@@ -1,8 +1,8 @@
-function showMessageInModal(message) {
-    var modalBody = document.querySelector('.message');
+// function showMessageInModal(message) {
+//     var modalBody = document.querySelector('.message');
 
-    modalBody.textContent = message;
+//     modalBody.textContent = message;
 
-    $('#exampleModal').modal('show'); 
-}
+//     $('#exampleModal').modal('show'); 
+// }
 
