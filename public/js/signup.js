@@ -8,8 +8,10 @@ $('#signup-form').on('submit', function(event) {
     const password = $('#password-signup').val().trim()
     const repeatPassword = $('#repeat-password-signup').val().trim()
 
+
+
     if (password !== repeatPassword) {
-        alert('Passwords do not match')
+        showMessageInModal('Passwords do not match')
         return
     }
     if (name_lastname && email && password) {
@@ -20,6 +22,12 @@ $('#signup-form').on('submit', function(event) {
         }).then((res) => {
             console.log('res', res)
             window.location.replace('/')
-        }).catch(err => console.log(err))
+        }).catch(err => {
+            if(err.responseJSON.name === 'SequelizeValidationError'){
+            showMessageInModal(err.responseJSON.errors[0].message)
+            }else{
+            showMessageInModal(err.responseJSON.message);
+            }
+        })
     }
 })
