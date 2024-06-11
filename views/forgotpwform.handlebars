@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>Forgot Password?</h2>
+            <form class="form login-form" id="forgot-password-form">
+                <div class="form-group">
+                    <label for="email-login">Email:</label>
+                    <input class="form-input" type="text" id="email-login" autocomplete="email" required />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="sendResetEmail(event)" type="submit">Send link</button>
+                    <button class="btn btn-primary"  onclick="window.location.href='/login'" type="button">Login</button>
+                    <button class="btn btn-primary" onclick="window.location.href='/signup'" type="button">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

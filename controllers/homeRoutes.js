@@ -40,10 +40,24 @@ router.get('/signup', (req, res) => {
     res.render('signup')
 })
 
+router.get('/forgotpwform', (req, res) => {
+    if (req.session.logged_in) {
+        res.redirect('/')
+        return
+    }
+
+    res.render('forgotpwform')
+})
+
+
+
+
+
 router.get('/:page', withAuth, async (req, res) => {
     const page = req.params.page;
     console.log(c('route subpage: '), page )
     renderPage({req, res, page})
 })
+
 
 module.exports = router;

@@ -200,3 +200,12 @@ function showMessageInModal(message) {
     modalBody.textContent = message;
     $('#exampleModal').modal('show'); 
 }
+
+
+function sendResetEmail(e){
+    e.preventDefault()
+    const email = document.querySelector('#email-login').value
+    console.log(email)
+
+
+}
