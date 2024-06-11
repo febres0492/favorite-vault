@@ -21,6 +21,7 @@ router.post('/', async (req, res) => {
         let bookData = {title: 'No books found'}
         if (booksRes.ok) { bookData = await booksRes.json() }
 
+        console.log(c('movieData'), bookData)
         res.status(200).json({ movieData, bookData })
     } catch (err) {
         console.error('Error:', err)

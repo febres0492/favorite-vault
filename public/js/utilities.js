@@ -182,9 +182,9 @@ async function searcher(queryParams) {
 }
 
 function searchInput(e) {
-    e.preventDefault()
     const query = document.querySelector('#searchBar').value
     if (e.key && e.key === 'Enter') { 
+        e.preventDefault()
         searcher(query)
     }
 }

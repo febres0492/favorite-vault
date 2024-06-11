@@ -89,7 +89,7 @@ p, span, a, button, li {font-size:calc( 1rem + min(var(--max-fvw), calc(var(--fv
 .d-table { display: table; }
 .d-table-row { display: table-row; }
 .d-table-cell { display: table-cell; }
-.d-flex { display: flex; }
+.d-flex { display: flex;}
 .d-inline-flex { display: inline-flex; }
 .d-none { display: none; }
 .d-flex { display: flex; }
@@ -162,8 +162,8 @@ p, span, a, button, li {font-size:calc( 1rem + min(var(--max-fvw), calc(var(--fv
 
 [style*=--row-cols-auto]>* { width: auto; }
 
-[style*=--d\:] { display: var(--d) }
-[style*=--gap\:] { gap: var(--gap) }
+[style*=--d\:] { display: var(--d); }
+[style*=--gap\:] { gap: var(--gap); }
 [style*=--x\:] { transform: translateX(var(--x)) }
 [style*=--y\:] { transform: translateY(var(--y)) }
 [style*=--z\:] { z-index: var(--z); }
