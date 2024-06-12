@@ -92,7 +92,7 @@ function saveToFavorite(obj) {
     })
 
     $.ajax({
-        url: 'api/favorite/addFavorite',
+        url: 'api/users/addFavorite',
         data: obj,
         method: 'POST'
     }).then((res) => {
@@ -100,20 +100,22 @@ function saveToFavorite(obj) {
     }).catch(err => console.log(err))
 }
 
-function getFavorites() {
+function getFavorites(type = 'all') {
     return $.ajax({
-        url: 'api/favorite/getFavorites',
-        method: 'GET'
+        url: `api/users/getFavorites?type=${type}`,
+        method: 'GET',
+        contentType: 'application/json'
     }).then((res) => {
-        console.log('getFavorites', res)
-        return res
-    }).catch(err => console.log(err))
+        console.log('getFavorites', res);
+        return res;
+    }).catch(err => console.log(err));
 }
+
 
 function deleteFavorite(btn, id ) {
     console.log('deleteFavorite', id, btn)
     $.ajax({
-        url: 'api/favorite/deleteFavorite',
+        url: 'api/users/deleteFavorite',
         data: { itemId: id},
         method: 'DELETE'
     }).then((res) => {
@@ -146,14 +148,22 @@ function renderFavorites(items) {
 }
 
 async function handleBtn(btn){
-    console.log('button clicked', btn)
-    const items = await getFavorites()
+    console.log('button clicked', btn.value)
+    const items = await getFavorites(btn.value)
     console.log('items', items)
     renderFavorites(items)
 }
 
 async function searcher(queryParams) {
+    if( queryParams.length == 0 ) {return} 
     try {
+        const { movieData, bookData } = await $.ajax({
+            url: 'api/external',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ query: queryParams.trim() })
+        })
+
         $('#main-content').empty();
         $('#main-content').html(`
             <div class="col-lg-6">
@@ -165,17 +175,9 @@ async function searcher(queryParams) {
                 <div id="movies"></div>
             </div>
         `)
-        
-        if (queryParams) {
-            const { movieData, bookData } = await $.ajax({
-                url: 'api/external',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ query: queryParams.trim() })
-            })
-            renderBooks(bookData)
-            renderMovies(movieData)
-        }
+
+        renderBooks(bookData)
+        renderMovies(movieData)
     } catch (err) {
         showMessageInModal(err)
     }
@@ -201,20 +203,16 @@ function showMessageInModal(message) {
     $('#exampleModal').modal('show'); 
 }
 
-
 function sendResetEmail(e){
     e.preventDefault()
     const email = document.querySelector('#email-login').value
-    console.log(email)
-    //Add send email function 
     $.ajax({
-        url: 'api/token/change',
+        url: 'api/token/email_token',
         data: { email: email},
         method: 'POST'
     }).then((res) => {
         console.log(res)
         window.location.replace('/passwordresetform')
-    //    showMessageInModal(res)
     }).catch(err => console.log(err))
 
 }
@@ -225,14 +223,12 @@ function updatePassword(e){
     const token = document.querySelector('#validation-input').value
     const newPassword = document.querySelector('#new-password').value
     const repeatNewPassword = document.querySelector('#repeat-new-password').value
-    if([token, newPassword, repeatNewPassword].some(item =>{
-        console.log(item)
-        return item.length === 0
-            
-    })){
+
+    // checking if any of the fields are empty
+    if([token, newPassword, repeatNewPassword].some(item => item.length === 0)){
         showMessageInModal('Missing value')
-        
     }
+    // checking if the new password and repeat password match
     if(newPassword!=repeatNewPassword){
         showMessageInModal('Passwords dont match!')
     }
@@ -243,18 +239,6 @@ function updatePassword(e){
         method: 'PUT'
     }).then((res) => {
         console.log(res)
-    //    showMessageInModal(res)
+       showMessageInModal(res)
     }).catch(err => console.log(err))
-    console.log("You are here now !updatePassword")
-    console.log(token, newPassword, repeatNewPassword)
-
-
-
-
-
-
-
-
-
-
 }

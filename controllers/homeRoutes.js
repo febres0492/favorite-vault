@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { User, Token } = require('../models');
 const withAuth = require('../utils/auth');
 const { renderPage, c } = require('../utils/helpers')
+const bcrypt = require('bcrypt');
 
 router.get('/', withAuth, async (req, res) => {
     try {
@@ -49,7 +50,6 @@ router.get('/forgotpwform', (req, res) => {
     res.render('forgotpwform')
 })
 
-
 router.get('/passwordresetform', (req, res) => {
     if (req.session.logged_in) {
         res.redirect('/')
@@ -59,35 +59,43 @@ router.get('/passwordresetform', (req, res) => {
 })
 
 router.put('/updatepassword', async (req, res) => {
-    console.log('Here : updatepassword')
-    console.log(req.body)
-    const myToken = req.body.token
-    console.log("This is the token" + myToken)
+    try {
+
+        // Import token from database
+        const tokenItem = await Token.findOne({ where: { user_email: req.body.email } });
+        if (!tokenItem) {
+            return res.status(400).json({ message: 'Token not found' });
+        }
+
+        if (req.body.token !== tokenItem.token) {
+            return res.status(400).json({ message: 'Token doesn\'t match' });
+        }
         
-    //Import token from database
-    const tokenItem= await Token.findOne({ where: { user_email: req.body.email } });
-    if(myToken !== tokenItem.token){
-        res.status(400).json({message : 'Token doesnt match'})
-        return
+        const currentUser = await User.findOne({ where: { email: req.body.email } });
+        if (!currentUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+        currentUser.password = hashedPassword;
+        await currentUser.save();
+
+        // loggin in the user
+        req.session.user_id = currentUser.id;
+        req.session.logged_in = true;
+
+        res.status(200).json({ message: 'Password updated successfully' });
+
+    } catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).json({ message: 'An error occurred while updating the password' });
     }
-    console.log('The token matched the database')
-    const currentUser = await User.findOne({where: {email: req.body.email}})
-    console.log(currentUser)
-    //Update the password of the user with the new password in the DB
-    currentUser.password === req.body.newPassword
-    console.log(req.body.newPassword)
-    //Render the login
-    // res.redirect()
-
-  
-})
-
+});
 
 router.get('/:page', withAuth, async (req, res) => {
     const page = req.params.page;
     console.log(c('route subpage: '), page )
     renderPage({req, res, page})
 })
-
 
 module.exports = router;

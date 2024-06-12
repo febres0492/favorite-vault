@@ -2,8 +2,7 @@ const router = require('express').Router();
 const {tokgen,sendToken} =require('../../utils/mailer')
 const {Token, User} = require('../../models');
 
-router.post('/change', async (req, res) => {
-    console.log("Route: change")
+router.post('/email_token', async (req, res) => {
     try {
         const val = await tokgen();
         const email = req.body.email;
@@ -22,12 +21,10 @@ router.post('/change', async (req, res) => {
         res.status(200).json({message:`Validation code sent ${email}`})
         console.log(`Validation code sent ${email}`)
         //Redirecting to the password reset form
-        
 
     } catch (err) {
         res.status(400).json(err)
     }
-
 })
 
 module.exports = router;

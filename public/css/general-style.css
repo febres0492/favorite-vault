@@ -249,8 +249,9 @@ p, span, a, button, li {font-size:calc( 1rem + min(var(--max-fvw), calc(var(--fv
 [style*=--bg\:] { background: var(--bg) }
 [style*=--bg-size\:] { background-size: var(--bg-size) }
 [style*=--blur\:] { backdrop-filter: blur(calc(var(--blur) * 1px)); -webkit-backdrop-filter: blur(calc(var(--blur) * 1px)); }
-[style*=--bs\:] { box-shadow: var(--bs-color) 0px 0px var(--bs-blur) var(--bs);
-}
+[style*=--bs\:] { box-shadow: var(--bs-color) 0px 0px var(--bs-blur) var(--bs); }
+[style*=--bg-l\:] { background-color: hsla(0, 0%, 100%, var(--bg-l)) }
+[style*=--bg-d\:] { background-color: hsla(0, 0%, 0%, var(--bg-d)) }
 
 [style*=--focus-bg\:]:focus { background-color: var(--focus-bg) }
 [style*=--active-bg\:]:active { background-color: var(--active-bg) }
