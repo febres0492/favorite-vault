@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const {tokgen,sendToken} =require('../../utils/mailer')
 const {Token, User} = require('../../models');
+const {c} = require('../../utils/helpers')
 
 router.post('/email_token', async (req, res) => {
+    console.log(c('req.body','r'), req.body)
     try {
         const val = await tokgen();
         const email = req.body.email;

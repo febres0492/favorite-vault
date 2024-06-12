@@ -213,7 +213,10 @@ function sendResetEmail(e){
     }).then((res) => {
         console.log(res)
         window.location.replace('/passwordresetform')
-    }).catch(err => console.log(err))
+    }).catch(err => {
+        console.log(err)
+        showMessageInModal(err.responseJSON.message)
+    })
 }
 
 function updatePassword(e){
