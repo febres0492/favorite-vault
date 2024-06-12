@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User } = require('../models');
+const { User, Token } = require('../models');
 const withAuth = require('../utils/auth');
 const { renderPage, c } = require('../utils/helpers')
 
@@ -50,7 +50,37 @@ router.get('/forgotpwform', (req, res) => {
 })
 
 
+router.get('/passwordresetform', (req, res) => {
+    if (req.session.logged_in) {
+        res.redirect('/')
+        return
+    }
+    res.render('passwordresetform')
+})
 
+router.put('/updatepassword', async (req, res) => {
+    console.log('Here : updatepassword')
+    console.log(req.body)
+    const myToken = req.body.token
+    console.log("This is the token" + myToken)
+        
+    //Import token from database
+    const tokenItem= await Token.findOne({ where: { user_email: req.body.email } });
+    if(myToken !== tokenItem.token){
+        res.status(400).json({message : 'Token doesnt match'})
+        return
+    }
+    console.log('The token matched the database')
+    const currentUser = await User.findOne({where: {email: req.body.email}})
+    console.log(currentUser)
+    //Update the password of the user with the new password in the DB
+    currentUser.password === req.body.newPassword
+    console.log(req.body.newPassword)
+    //Render the login
+    // res.redirect()
+
+  
+})
 
 
 router.get('/:page', withAuth, async (req, res) => {

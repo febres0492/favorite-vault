@@ -92,7 +92,7 @@ function saveToFavorite(obj) {
     })
 
     $.ajax({
-        url: 'api/users/addFavorite',
+        url: 'api/favorite/addFavorite',
         data: obj,
         method: 'POST'
     }).then((res) => {
@@ -102,7 +102,7 @@ function saveToFavorite(obj) {
 
 function getFavorites() {
     return $.ajax({
-        url: 'api/users/getFavorites',
+        url: 'api/favorite/getFavorites',
         method: 'GET'
     }).then((res) => {
         console.log('getFavorites', res)
@@ -113,7 +113,7 @@ function getFavorites() {
 function deleteFavorite(btn, id ) {
     console.log('deleteFavorite', id, btn)
     $.ajax({
-        url: 'api/users/deleteFavorite',
+        url: 'api/favorite/deleteFavorite',
         data: { itemId: id},
         method: 'DELETE'
     }).then((res) => {
@@ -206,6 +206,55 @@ function sendResetEmail(e){
     e.preventDefault()
     const email = document.querySelector('#email-login').value
     console.log(email)
+    //Add send email function 
+    $.ajax({
+        url: 'api/token/change',
+        data: { email: email},
+        method: 'POST'
+    }).then((res) => {
+        console.log(res)
+        window.location.replace('/passwordresetform')
+    //    showMessageInModal(res)
+    }).catch(err => console.log(err))
+
+}
+
+function updatePassword(e){
+    e.preventDefault()
+    const email = document.querySelector('#email').value
+    const token = document.querySelector('#validation-input').value
+    const newPassword = document.querySelector('#new-password').value
+    const repeatNewPassword = document.querySelector('#repeat-new-password').value
+    if([token, newPassword, repeatNewPassword].some(item =>{
+        console.log(item)
+        return item.length === 0
+            
+    })){
+        showMessageInModal('Missing value')
+        
+    }
+    if(newPassword!=repeatNewPassword){
+        showMessageInModal('Passwords dont match!')
+    }
+
+    $.ajax({
+        url: '/updatepassword',
+        data: {email, token, newPassword},
+        method: 'PUT'
+    }).then((res) => {
+        console.log(res)
+    //    showMessageInModal(res)
+    }).catch(err => console.log(err))
+    console.log("You are here now !updatePassword")
+    console.log(token, newPassword, repeatNewPassword)
+
+
+
+
+
+
+
+
 
 
 }
