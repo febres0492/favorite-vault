@@ -3,3 +3,13 @@
     --accent-color-2:hsl(251, 31%, 11%);
     --color-1: #f5f5f5;
 }
+
+body {
+
+    
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
