@@ -71,11 +71,13 @@ router.put('/updatepassword', async (req, res) => {
         return
     }
     console.log('The token matched the database')
-    const currentUser = await User.findOne({where: {email: req.body.email}})
-    console.log(currentUser)
+        
     //Update the password of the user with the new password in the DB
-    currentUser.password === req.body.newPassword
-    console.log(req.body.newPassword)
+    const currentUser = await User.update({password: req.body.newPassword},{where: {email: req.body.email}, individualHooks: true})
+    console.log(currentUser)
+
+  
+    console.log("This is the new password: " + req.body.newPassword)
     //Render the login
     // res.redirect()
 
