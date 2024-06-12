@@ -2,7 +2,6 @@ const router = require('express').Router();
 const {tokgen,sendToken} =require('../../utils/mailer')
 const {Token, User} = require('../../models');
 
-
 router.post('/change', async (req, res) => {
     console.log("Route: change")
     try {
