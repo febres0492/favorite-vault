@@ -6,7 +6,7 @@ require('dotenv').config();
 async function sendToken(user, token) {
 
     const transporter = mailer.createTransport({
-        service: 'gmail', // You can use any email service provider
+        service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
@@ -28,4 +28,11 @@ async function sendToken(user, token) {
     }
 }
 
-sendToken('ergordosesi@gmail.com','789101');
+const tokgen = () => {
+    const randomToken = Math.random().toString(36).slice(2, 8);
+    return randomToken;
+}
+
+
+
+module.exports = {sendToken, tokgen};

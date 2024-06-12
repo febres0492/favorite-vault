@@ -3,8 +3,6 @@ const sequelize = require('../config/connection');
 
 class Token extends Model { }
 
-// const randomToken = Math.random().toString(36).slice(2, 8);
-
 Token.init({
     user_email:{
             type: DataTypes.STRING,
