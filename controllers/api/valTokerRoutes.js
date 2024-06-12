@@ -11,7 +11,7 @@ router.post('/email_token', async (req, res) => {
         const user = await User.findOne({where:{email: email}})
         
         if(!user){
-            res.status(400).json({message:"User not found"})
+            res.status(400).json({message:"User not found. Try another Email."})
             return
         }
         //Delete all tokens
