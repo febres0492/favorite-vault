@@ -214,7 +214,6 @@ function sendResetEmail(e){
         console.log(res)
         window.location.replace('/passwordresetform')
     }).catch(err => console.log(err))
-
 }
 
 function updatePassword(e){
@@ -239,6 +238,6 @@ function updatePassword(e){
         method: 'PUT'
     }).then((res) => {
         console.log(res)
-       showMessageInModal(res)
+        window.location.replace('/login')
     }).catch(err => console.log(err))
 }
