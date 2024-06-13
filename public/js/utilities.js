@@ -26,16 +26,17 @@
 
 
 // function to generate the movie cards
-function renderMovies  (res)  {
+function renderMovies(res)  {
     const items = [...res.results]
     items.forEach(item => {
+        const imgUrl = item.poster_path ? `https://image.tmdb.org/t/p/w500/${item.poster_path}` : '/img/placeholder.png'
         $('#movies').append(`
-            <div class="col-md-6">
-                <div class="card">
-                    <h3>${item.title}</h3>
-                    <img src="https://image.tmdb.org/t/p/w500/${item.poster_path}" class="card-img" alt="Movie Poster">
-                    <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
-                    <button class="btn btn-secondary result-item" onclick = "saveItem(this,'movie')">Favorite</button>
+            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+                <div class="card-item">
+                    <h4 class="card-title">${item.title || 'Unknown'}</h4>
+                    <img src="${imgUrl}" alt="Book cover for ${item.title || 'unknown'}">
+                    <button class="btn btn-primary result-item" onclick="saveItem(this,'movie')">Add to Favorite</button> 
+                    <a class="action-btn btn border text-white" target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
                 </div>
             </div>
         `)
@@ -54,12 +55,12 @@ function renderBooks(response) {
 
         let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
         container.innerHTML += `
-            <div class="col-md-6">
-                <div class="card" style="">
-                    <h3>${item.volumeInfo.title}</h3>
-                    <img src="${bookImg1}" class="card-img" alt="Book cover">
-                    <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
-                    <button class="btn btn-secondary result-item" onclick = "saveItem(this,'book')">Favorite</button> 
+            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+                <div class="card-item">
+                    <h4 class="card-title">${item.volumeInfo.title}</h4>
+                    <img src="${bookImg1}" alt="Book cover for ${item.volumeInfo.title}">
+                    <button class="btn btn-primary result-item" onclick="saveItem(this,'book')">Add to Favorite</button> 
+                    <a class="action-btn btn border text-white" target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
                 </div>
             </div>
         `
@@ -67,14 +68,17 @@ function renderBooks(response) {
 }
 
 function saveItem (element, type) {
-    console.log(element, type);
-    const itemName = $(element).closest('.card').find('h3').text();
+    $(element).text('Saved')
+    $(element).attr('disabled', true)
+
+    const itemName = $(element).closest('.card').find('.card-title').text();
     const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
-    console.log(imgUrl);
+    const actionBtnStr = $(element).closest('.card').find('.action-btn').prop('outerHTML')
+    
     saveToFavorite({
         itemType: type,
         itemName: itemName,
-        itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] }),
+        itemData: JSON.stringify({ "actionBtnStr": actionBtnStr }),
         itemImg: imgUrl
     })
 }
@@ -111,7 +115,6 @@ function getFavorites(type = 'all') {
     }).catch(err => console.log(err));
 }
 
-
 function deleteFavorite(btn, id ) {
     console.log('deleteFavorite', id, btn)
     $.ajax({
@@ -119,31 +122,56 @@ function deleteFavorite(btn, id ) {
         data: { itemId: id},
         method: 'DELETE'
     }).then((res) => {
-        btn.closest('.favorite-item').remove()
+        btn.closest('.card').remove()
+
+        const cards = $('#main-content').find('.card').length
+        if (!cards) {
+            $('#main-content').html(`
+                <div class="col-12 py-2 jcc">
+                    <span class="horizontal-divider"></span>
+                    <h3>No Favorites Saved</h3>
+                </div>
+            `)
+        }
+        
     }).catch(err => console.log(err))
 }
 
 function renderFavorites(items) {
+    console.log('renderFavorites', items)
 
     if (!items.length) {
-        $('#main-content')[0].innerHTML = '<h3>No favorites saved</h3>'
+        $('#main-content').html(`
+            <div class="col-12 py-2 jcc">
+                <span class="horizontal-divider"></span>
+                <h3>No Favorites Saved</h3>
+            </div>
+        `)
         return
     }
 
     const container = $('#main-content')[0]
-    container.innerHTML = ''
+    container.innerHTML = `
+        <div class="col-12 py-2">
+            <span class="horizontal-divider"></span>
+            <h3>Favorites</h3>
+            <div id="fav-container" class="row"></div>
+        </div>
+    `
 
     items.forEach(item => {
         const { id, itemType, itemName, itemData } = item
-        container.innerHTML += `
-            <div class="favorite-item border p-1 mb-1">
-                <h3>${itemName || 'Undefined' }</h3>
-                <img src = "${item.itemImg} "> 
-                <p>${itemType}</p>
-                <p>${id}</p>
-                <button onclick="deleteFavorite(this, ${id})">Delete</button>
+        const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Open</button>'
+        $('#fav-container').append(`
+            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+                <div class="card-item">
+                    <h4>${itemName || 'Undefined'}</h4>
+                    <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                    ${actionBtnStr}
+                    <button class="btn btn-secondary" onclick="deleteFavorite(this, ${id})">Remove</button>
+                </div>
             </div>
-        `
+        `)
     })
 }
 
@@ -162,24 +190,28 @@ async function searcher(queryParams) {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ query: queryParams.trim() })
-        })
+        }).catch(err => showMessageInModal(err) )
 
         $('#main-content').empty();
         $('#main-content').html(`
-            <div class="col-lg-6">
+            <div class="col-12 pt-2 jcc"><h3 class="m-0">Search Results for: ${queryParams}</h3></div>
+            <div class="col-12 py-2">
+                <span class="horizontal-divider"></span>
                 <h3>Books</h3>
-                <div id="books"></div>
+                <div id="books" class="row"></div>
             </div>
-            <div class="col-lg-6">
+
+            <div class="col py-2">
+                <span class="horizontal-divider"></span>
                 <h3>Movies</h3>
-                <div id="movies"></div>
+                <div id="movies" class="row"></div>
             </div>
         `)
 
         renderBooks(bookData)
         renderMovies(movieData)
     } catch (err) {
-        showMessageInModal(err)
+        console.error('searcher', err)
     }
 }
 
@@ -244,3 +276,4 @@ function updatePassword(e){
         window.location.replace('/login')
     }).catch(err => console.log(err))
 }
+

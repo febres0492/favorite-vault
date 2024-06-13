@@ -1,21 +1,25 @@
-<section class="container-fluid p-0">
-    <div class="row">
-        {{> sidebar}}
-        <main class="col border">
-            <h4>homepage</h4>
-            <p>Welcome to the homepage</p>
-
-            <form class="form search-form">
-                <input id="searchBar" type="text" name="search"  
-                    placeholder="Search for Movies or Books ..." onkeydown="searchInput(event)"
+<section class="container-fluid d-flex flex-column p-0" style="--minh:100vh;">
+    <div class="row px-3" style="--pt:15">
+        <div class="col d-flex flex-column flex-sm-row bg-d2 rounded aic px-0">
+            <form class="form search-form d-flex ais p-2" style="--g:0;">
+                <input id="searchBar" type="text" name="search" value="dark knight"
+                    placeholder="Movies or Books ..." onkeydown="searchInput(event)"
                 >
-                <button type="button" id="search-button" onclick="searchBtn(event)">search</i></button>
+                <button class="btn btn-sm btn-primary rounded" type="button" id="search-button" onclick="searchBtn(event)">search</button>
             </form>
-
-            <div id="main-content" class="row">
+            <span class="divider pl-1 rounded mx-1 bg-l2 d-none d-md-inline"></span>
+            <div class="df jcc p-2 rounded aib m-auto" style="--g:2;">
+                <h5 class="m-0">Saved Favorites:</h5>
+                <div>
+                    <button class="btn btn-sm bg-d2" onclick="handleBtn(this)" value="movie">Movies</button>
+                    <button class="btn btn-sm bg-d2" onclick="handleBtn(this)" value="book">Books</button>
+                    <button class="btn btn-sm bg-d2" onclick="handleBtn(this)" value="all">All</button>
+                </div>
             </div>
-        </main>
-
+        </div>
+    </div>
+    <div id="main-content" class="row fg">
+        {{!-- this is for dinamic content --}}
     </div>
 </section>
 <script src="/js/homepage.js"></script>

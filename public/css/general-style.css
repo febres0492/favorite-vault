@@ -48,6 +48,7 @@ img {max-width: 100%;}
 .aife {align-items: flex-end;}
 .ais {align-items: stretch;}
 .aic {align-items: center;}
+.aib {align-items: baseline;}
 .acfs {align-content: flex-start;}
 .acfe {align-content: flex-end;}
 .acc {align-content: center;}
@@ -509,8 +510,8 @@ p, span, a, button, li {font-size:calc( 1rem + min(var(--max-fvw), calc(var(--fv
     [style*=--my-xxl\:] { margin-top: calc(0.25rem * var(--my-xxl)); margin-bottom: calc(0.25rem * var(--my-xxl)) }
 }
 
-.show-dropdown{ display: block; }
-.right-0 { 
+
+/* .right-0 { 
     left: auto;
     right: 0; 
-}
+} */
