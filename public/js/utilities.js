@@ -277,3 +277,40 @@ function updatePassword(e){
     }).catch(err => console.log(err))
 }
 
+function loadPasswordForm(e){
+    $('.modal-header').empty();
+    $('.modal-footer').empty();
+    $('.modal-body').empty();
+    $('.modal-body').html(`
+        <div class="col-12 py-2 jcc">
+            <h3>Reset Password</h3>
+            <form id="reset-password-form">
+                <div class="form-group ">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" class="form-control" id="current-password" placeholder="Enter current password" required>
+                </div>
+                <div class="form-group ">
+                    <label for="new-password">New Password</label>
+                    <input type="password" class="form-control" id="new-password" placeholder="Enter new password" required>
+                </div>
+                <div class="form-group ">
+                    <label for="repeat-new-password">Repeat New Password</label>
+                    <input type="password" class="form-control" id="repeat-new-password" placeholder="Repeat new password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    `)
+
+    const currentPassword = document.querySelector('#current-password').value
+    const newPassword = document.querySelector('#new-password').value
+    const repeatNewPassword = document.querySelector('#repeat-new-password').value
+
+    if(newPassword!=repeatNewPassword){
+        $('.modal-header').empty();
+        $('.modal-header').html(`h4 class="modal-title color-warning">Passwords dont match!</h4>`)
+        return
+    }
+
+    $('#exampleModal').modal('show'); 
+}

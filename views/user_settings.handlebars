@@ -1,6 +1,21 @@
-<div class="row">
-    <div class="column">
-        <h1>Account Settings</h1>
-        <p>Account Settings page</p>
+<section class="container-fluid d-flex flex-column p-0" style="--minh:100vh;">
+    <div class="row px-3" style="--pt:15;">
+        <div class="col-12 d-flex flex-column bg-d2 rounded py-2 mb-3" style="--g:3;">
+            <h3>User Info</h3>
+            <div class="d-flex aic bg-d2 p-2" style="--g:3; --ch-m:0;">
+                <h4 style="--fs:20px;">User Name:</h4>
+                <p class="border rounded px-2" style="--fs:20px;">{{currUser.name}}</p>
+            </div>
+            <div class="d-flex aic bg-d2 p-2" style="--g:3; --ch-m:0;">
+                <h4 style="--fs:20px;">User Email:</h4>
+                <p class="border rounded px-2" style="--fs:20px;">{{currUser.email}}</p>
+            </div>
+        </div>
+        <div class="col-12 d-flex flex-column bg-d2 rounded py-2" style="--g:3;">
+            <h3>Account Settings</h3>
+            <div class="d-flex aic bg-d2 p-2" style="--g:3; --ch-m:0;">
+                <button class="btn text-white bg-primary" onclick="loadPasswordForm(event)">Update password</button>
+            </div>
+        </div>
     </div>
-</div>
+</section>

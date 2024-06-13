@@ -110,6 +110,8 @@ router.get('/:page', withAuth, async (req, res) => {
         const validPage = pageList.indexOf(page) > -1 ? page : 'homepage'
         const message = validPage === page ? null : 'Page not found, redirecting to homepage...'
 
+        console.log(c('current user: '), req.session.currUser)
+
         res.render(validPage, {
             logged_in: req.session.logged_in,
             user_id: req.session.user_id,
