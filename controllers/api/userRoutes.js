@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { User, Favorites } = require('../../models');
 const c = require('../../utils/helpers').c
+const bcrypt = require('bcrypt')
 
 router.post('/login', async (req, res) => {
     try {
@@ -131,6 +132,33 @@ router.delete('/deleteFavorite', async (req, res) => {
         console.log('err', err)
         res.status(400).json(err)
     }
+})
+
+router.put('/update_password', async (req, res) => {
+    const currentUser = await User.findOne({ where: { email: req.body.email } });
+    if (!currentUser) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    const checkingCurPass = await bcrypt.compare(req.body.currentPassword, currentUser.password);
+    if(!checkingCurPass){
+        return res.status(400).json({ message: 'Wrong current password' });
+    }
+
+    const isNewPassSameAsCurPass = await bcrypt.compare(req.body.newPassword, currentUser.password);
+    if(isNewPassSameAsCurPass){
+        return res.status(400).json({ message: 'Current password and New password cannot be the same' });
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+    currentUser.password = hashedPassword;
+    await currentUser.save();
+
+    // loggin in the user
+    req.session.user_id = currentUser.id;
+    req.session.logged_in = true;
+
+    return res.status(200).json({ message: 'Password Updated' });
 })
 
 

@@ -230,8 +230,12 @@ function searchBtn(e) {
 }
 
 function showMessageInModal(message) {
-    const modalBody = document.querySelector('.message');
-    modalBody.textContent = message;
+    $('.modal-body').empty();
+    $('.modal-body').html(`
+        <div class="col-12 py-2 jcc">
+            <h3>${message}</h3>
+        </div>
+    `)
     $('#exampleModal').modal('show'); 
 }
 
@@ -278,8 +282,8 @@ function updatePassword(e){
 }
 
 function loadPasswordForm(e){
+    e.preventDefault()
     $('.modal-header').empty();
-    $('.modal-footer').empty();
     $('.modal-body').empty();
     $('.modal-body').html(`
         <div class="col-12 py-2 jcc">
@@ -297,20 +301,41 @@ function loadPasswordForm(e){
                     <label for="repeat-new-password">Repeat New Password</label>
                     <input type="password" class="form-control" id="repeat-new-password" placeholder="Repeat new password" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="submit-btn btn btn-primary">Submit</button>
             </form>
         </div>
     `)
 
-    const currentPassword = document.querySelector('#current-password').value
-    const newPassword = document.querySelector('#new-password').value
-    const repeatNewPassword = document.querySelector('#repeat-new-password').value
+    $('#exampleModal').modal('show')
 
-    if(newPassword!=repeatNewPassword){
+    $('.submit-btn').on('click', ()=>{
+
         $('.modal-header').empty();
-        $('.modal-header').html(`h4 class="modal-title color-warning">Passwords dont match!</h4>`)
-        return
-    }
 
-    $('#exampleModal').modal('show'); 
+        const currentPassword = document.querySelector('#current-password').value
+        const newPassword = document.querySelector('#new-password').value
+        const repeatNewPassword = document.querySelector('#repeat-new-password').value
+    
+        if(newPassword!=repeatNewPassword){
+            $('.modal-header').empty();
+            $('.modal-header').html(`<h4 class="modal-title text-warning">New Password and Repeat Password do not match!</h4>`)
+            return
+        }
+
+        $.ajax({
+            url: '/api/users/update_password',
+            data: {currentPassword, newPassword, 'email': $('#email').text()},
+            method: 'PUT'
+        }).then((res) => {
+            console.log(res)
+            showMessageInModal('Password Updated!')
+        }).catch(err => {
+            console.log(err)
+            setTimeout(() => {
+                $('.modal-header').empty();
+                $('.modal-header').html(`<h4 class="modal-title text-warning">${err.responseJSON.message}</h4>`)
+            }, 1000)
+            
+        })
+    })
 }

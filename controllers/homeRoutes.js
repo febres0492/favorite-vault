@@ -61,9 +61,9 @@ router.get('/passwordresetform', (req, res) => {
 
 router.put('/updatepassword', async (req, res) => {
     try {
-
         // Import token from database
         const tokenItem = await Token.findOne({ where: { user_email: req.body.email } });
+
         if (!tokenItem) {
             return res.status(400).json({ message: 'Token not found' });
         }
