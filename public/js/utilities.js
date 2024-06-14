@@ -240,6 +240,8 @@ function renderFavorites(items) {
 }
 
 async function handleBtn(btn) {
+    $('#movie-content').empty();
+    $('#book-content').empty();
     console.log('button clicked', btn.value)
     const items = await getFavorites(btn.value)
     console.log('items', items)
