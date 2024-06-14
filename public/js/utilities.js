@@ -24,29 +24,48 @@
 // War             10752
 // Western         37
 
-const  placeHldr = 'https://via.placeholder.com/150';
-
-const maxChar = 250;
 // function to generate the movie cards
 function renderMovies(res)  {
 
     if (!res.results.length) {
-        $('#movies').html(`
-            <div class="col-12 py-2 jcc">
-                <h3>No Movies Found</h3>
+        $('#main-content').append(`
+            <div class="col-12 py-2 px-3">
+                <span class="horizontal-divider"></span>
+                <h3>Movies</h3>
+                <div id="movies" class="row">
+                    <div class="col-12 py-2 jcc">
+                        h3>No Movies Found</h3>
+                    </div>
+                </div>
             </div>
         `)
         return
     }
 
+    $('#main-content').append(`
+        <div class="col-12 py-2 px-3">
+            <span class="horizontal-divider"></span>
+            <h3>Movies</h3>
+        </div>
+        <div class="col-12 py-2 px-0">
+            <div id="movies" class="row"></div>
+        </div>
+    `)
+
     const items = [...res.results]
     items.forEach(item => {
         const imgUrl = item.poster_path ? `https://image.tmdb.org/t/p/w500/${item.poster_path}` : '/img/placeholder.png'
+        let description = item.overview || item.title;
         $('#movies').append(`
-            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-12 col-sm-4 col-lg-3 col-xl-2 p-3 mb-3" data-description="${description}">
                 <div class="card-item">
                     <h4 class="card-title">${item.title || 'Unknown'}</h4>
-                    <img src="${imgUrl}" alt="Book cover for ${item.title || 'unknown'}">
+                    <div class="rel">
+                        <img src="${imgUrl}" alt="Book cover for ${item.title || 'unknown'}">
+                        <div class="overlay df jcc">
+                            <p class="text description">${description}</p>
+                        </div>
+                    </div>
                     <button class="btn btn-primary result-item" onclick="saveItem(this,'movie')">Add to Favorite</button> 
                     <a class="action-btn btn border text-white" target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
                 </div>
@@ -58,13 +77,29 @@ function renderMovies(res)  {
 function renderBooks(response) {
 
     if (!response.items) {
-        $('#books').html(`
-            <div class="col-12 py-2 jcc">
-                <h3>No Books Found</h3>
+        $('#main-content').append(`
+            <div class="col-12 py-2 px-3">
+                <span class="horizontal-divider"></span>
+                <h3>Books</h3>
+                <div id="books" class="row">
+                    <div class="col-12 py-2 jcc">
+                        <h3>No Books Found</h3>
+                    </div>
+                </div>
             </div>
         `)
         return
     }
+
+    $('#main-content').append(`
+        <div class="col-12 py-2 px-3">
+            <span class="horizontal-divider"></span>
+            <h3>Books</h3>
+        </div>
+        <div class="col-12 py-2 px-0">
+            <div id="books" class="row"></div>
+        </div>
+    `)
 
     const container = document.getElementById('books')
     container.innerHTML = ''
@@ -72,13 +107,22 @@ function renderBooks(response) {
     for (var i = 0; i < response.items.length; i++) {
         let item = response.items[i]
         let viewUrl = item.volumeInfo.previewLink
+        const dataStr = JSON.stringify(item)
 
-        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : '/img/placeholder.png';
+        
+
+        let bookImg1 = item.volumeInfo?.imageLinks?.thumbnail || '/img/placeholder.png';
+        let description = item.volumeInfo?.description || item.volumeInfo?.title;
         container.innerHTML += `
-            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-12 col-sm-4 col-lg-3 col-xl-2 p-3 mb-3" data-description="${description}">
                 <div class="card-item">
                     <h4 class="card-title">${item.volumeInfo.title}</h4>
-                    <img src="${bookImg1}" alt="Book cover for ${item.volumeInfo.title}">
+                    <div class="rel">
+                        <img src="${bookImg1}" alt="Book cover for ${item.volumeInfo.title || 'unknown'}">
+                        <div class="overlay df jcc">
+                            <p class="text">${description}</p>
+                        </div>
+                    </div>
                     <button class="btn btn-primary result-item" onclick="saveItem(this,'book')">Add to Favorite</button> 
                     <a class="action-btn btn border text-white" target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
                 </div>
@@ -90,7 +134,8 @@ function renderBooks(response) {
 function saveItem (element, type) {
     $(element).text('Saved')
     $(element).attr('disabled', true)
-
+    const description = $(element).closest('.card').attr('data-description')
+    console.log('escription -------------', description )
     const itemName = $(element).closest('.card').find('.card-title').text();
     const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
     const actionBtnStr = $(element).closest('.card').find('.action-btn').prop('outerHTML')
@@ -98,7 +143,7 @@ function saveItem (element, type) {
     saveToFavorite({
         itemType: type,
         itemName: itemName,
-        itemData: JSON.stringify({ "actionBtnStr": actionBtnStr }),
+        itemData: JSON.stringify({ "description": description, "actionBtnStr": actionBtnStr}),
         itemImg: imgUrl
     })
 }
@@ -174,19 +219,30 @@ function renderFavorites(items) {
     container.innerHTML = `
         <div class="col-12 py-2">
             <span class="horizontal-divider"></span>
-            <h3>Favorites</h3>
+            <h2>Favorites</h2>
+        </div>
+        <div class="col-12 py-2 p-0">
             <div id="fav-container" class="row"></div>
         </div>
     `
 
-    items.forEach(item => {
+    items.forEach((item, i) => {
         const { id, itemType, itemName, itemData } = item
+        if(i == 0){
+            console.log('item', JSON.parse(itemData))
+        }
         const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Not Available</button>'
+        const description = JSON.parse(itemData).description || itemName
         $('#fav-container').append(`
-            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-12 col-sm-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
                     <h4>${itemName || 'Undefined'}</h4>
-                    <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                    <div class="rel">
+                        <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                        <div class="overlay df jcc">
+                            <p class="text">${description}</p>
+                        </div>
+                    </div>
                     ${actionBtnStr}
                     <button class="btn btn-secondary" onclick="deleteFavorite(this, ${id})">Remove</button>
                 </div>
@@ -199,6 +255,7 @@ async function handleBtn(btn){
     console.log('button clicked', btn.value)
     const items = await getFavorites(btn.value)
     console.log('items', items)
+    $('#searchBar').val('')
     renderFavorites(items)
 }
 
@@ -240,22 +297,14 @@ async function searcher(queryParams) {
 
         $('#main-content').empty();
         $('#main-content').html(`
-            <div class="col-12 pt-2 jcc"><h3 class="m-0">Search Results for: ${queryParams}</h3></div>
-            <div class="col-12 py-2">
-                <span class="horizontal-divider"></span>
-                <h3>Books</h3>
-                <div id="books" class="row"></div>
-            </div>
-
-            <div class="col py-2">
-                <span class="horizontal-divider"></span>
-                <h3>Movies</h3>
-                <div id="movies" class="row"></div>
+            <div class="col-12 pt-4 jcc d-flex aic">
+                <h3 class="m-0">Search Results for:</h3>
+                <p class="m-0 h3 ml-2 p-1 px-2 rounded bg-d2">${queryParams}</p>
             </div>
         `)
 
-        renderBooks(bookData)
         renderMovies(movieData)
+        renderBooks(bookData)
     } catch (err) {
         console.error('searcher', err)
     }

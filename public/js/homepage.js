@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     $('#searchBar').on('click', showPreviousSearchDropdown)
     $('#searchBar').on('focusout', () => {
         setTimeout(() => {
-            $('#searchDropdown').hide()
-        }, 100)
+            $('#prev-search-dropdown').empty()
+        }, 500)
     })
     
     const favorites = await getFavorites()

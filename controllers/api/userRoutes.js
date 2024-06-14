@@ -101,7 +101,6 @@ router.get('/getFavorites', async (req, res) => {
 
 //addding item to user's favorites
 router.post('/addFavorite', async (req, res) => {
-    console.log('Hello')
     try {
         const item = {
             userId: req.session.user_id,
