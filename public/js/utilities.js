@@ -24,7 +24,9 @@
 // War             10752
 // Western         37
 
+const  placeHldr = 'https://via.placeholder.com/150';
 
+const maxChar = 250;
 // function to generate the movie cards
 function renderMovies(res)  {
 
