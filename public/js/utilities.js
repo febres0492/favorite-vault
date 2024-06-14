@@ -234,6 +234,8 @@ async function searcher(queryParams) {
 
         $('#prev-search-dropdown').empty()
 
+        $('#searchBar').val(queryParams)
+
         $('#main-content').empty();
         $('#main-content').html(`
             <div class="col-12 pt-2 jcc"><h3 class="m-0">Search Results for: ${queryParams}</h3></div>
