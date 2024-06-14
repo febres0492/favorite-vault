@@ -5,9 +5,9 @@ const bcrypt = require('bcrypt')
 
 // logging in the user
 router.post('/login', async (req, res) => {
+    console.log(c('logging in the user','r'), req.body)
     try {
         const userData = await User.findOne({ where: { email: req.body.email } });
-
         if (!userData) {
             res
                 .status(400)
@@ -16,24 +16,20 @@ router.post('/login', async (req, res) => {
         }
 
         const validPassword = await userData.checkPassword(req.body.password);
-
+        console.log(c('validPassword'), validPassword)
         if (!validPassword) {
-            res
-                .status(400)
-                .json({ message: 'Incorrect email or password, please try again' });
-            return;
+            return res.status(400).json({ message: 'Incorrect email or password, please try again' });
         }
-
-        console.log(c('userData'), userData)
 
         req.session.save(() => {
             req.session.user_id = userData.id;
             req.session.logged_in = true;
-
+            console.log(c('You are now logged in'))
             res.json({ user: userData, message: 'You are now logged in!' });
         });
 
     } catch (err) {
+        console.log(c('err','r'), err)
         res.status(400).json(err);
     }
 })

@@ -4,7 +4,7 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
 const helpers = require('./utils/helpers');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
@@ -22,7 +22,7 @@ const sess = {
     cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: 'strict',
     },
     resave: false,
@@ -33,7 +33,7 @@ const sess = {
 };
 
 app.use(session(sess))
-app.use(cookieParser())
+// app.use(cookieParser())
 
 app.engine('handlebars', hbs.engine)
 app.set('view engine', 'handlebars')
