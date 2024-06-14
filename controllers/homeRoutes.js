@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { User, Token } = require('../models');
 const withAuth = require('../utils/auth');
-const { renderPage, c } = require('../utils/helpers')
+const { c } = require('../utils/helpers')
 const bcrypt = require('bcrypt');
 
 router.get('/', withAuth, async (req, res) => {
@@ -17,6 +17,7 @@ router.get('/', withAuth, async (req, res) => {
             users,
             currUser: users.find(user => user.id === req.session.user_id),
             logged_in: req.session.logged_in,
+            homePage: true
         });
     } catch (err) {
         res.status(500).json(err);
@@ -60,9 +61,9 @@ router.get('/passwordresetform', (req, res) => {
 
 router.put('/updatepassword', async (req, res) => {
     try {
-
         // Import token from database
         const tokenItem = await Token.findOne({ where: { user_email: req.body.email } });
+
         if (!tokenItem) {
             return res.status(400).json({ message: 'Token not found' });
         }
@@ -93,9 +94,35 @@ router.put('/updatepassword', async (req, res) => {
 });
 
 router.get('/:page', withAuth, async (req, res) => {
-    const page = req.params.page;
-    console.log(c('route subpage: '), page )
-    renderPage({req, res, page})
-})
+    try {
+        const page = req.params.page
+        console.log(c('route subpage: '), page)
+
+        // getting currUser 
+        if (!req.session.currUser) {
+            const user = await User.findByPk(req.session.user_id, {
+                attributes: { exclude: ['password'] }
+            })
+            req.session.currUser = user ? user.get({ plain: true }) : null
+        }
+
+        const pageList = ['homepage', 'user_settings']
+        const validPage = pageList.indexOf(page) > -1 ? page : 'homepage'
+        const message = validPage === page ? null : 'Page not found, redirecting to homepage...'
+
+        console.log(c('current user: '), req.session.currUser)
+
+        res.render(validPage, {
+            logged_in: req.session.logged_in,
+            user_id: req.session.user_id,
+            currUser: req.session.currUser,
+            page: validPage,
+            message: message,
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
 
 module.exports = router;

@@ -30,6 +30,14 @@ const  placeHldr = 'https://via.placeholder.com/150';
 const maxChar = 250;
 // function to generate the movie cards
 function renderMovies(res) {
+    if (!res.results.length) {
+        $('#movies').html(`
+            <div class="col-12 py-2 jcc">
+                <h3>No Movies Found</h3>
+            </div>
+        `)
+        return
+    }
     const items = [...res.results]
 
     for (let i = 0; i < items.length; i += 6) {
@@ -61,7 +69,14 @@ function renderMovies(res) {
 }
 
 function renderBooks(response) {
-
+    if (!response.items) {
+        $('#books').html(`
+            <div class="col-12 py-2 jcc">
+                <h3>No Books Found</h3>
+            </div>
+        `)
+        return
+    }
     const items = [...response.items]
     for (let i = 0; i < items.length; i += 6) {
         let carouselItem = `<div class="carousel-item ${i === 0 ? 'active' : ''}"><div class="row justify-content-center">`;
@@ -114,15 +129,18 @@ function renderBooks(response) {
 
 }
 
-function saveItem(element, type) {
-    console.log(element, type);
-    const itemName = $(element).closest('.card').find('h3').text();
-    const imgUrl = $(element).closest('.card').find('img')[0].attributes.src.nodeValue
-    console.log(imgUrl);
+function saveItem (element, type) {
+    $(element).text('Saved')
+    $(element).attr('disabled', true)
+
+    const itemName = $(element).closest('.card').find('.card-title').text();
+    const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
+    const actionBtnStr = $(element).closest('.card').find('.action-btn').prop('outerHTML')
+    
     saveToFavorite({
         itemType: type,
         itemName: itemName,
-        itemData: JSON.stringify({ name: itemName, values: [1, 2, 3, 4, '5', '6'] }),
+        itemData: JSON.stringify({ "actionBtnStr": actionBtnStr }),
         itemImg: imgUrl
     })
 }
@@ -159,39 +177,63 @@ function getFavorites(type = 'all') {
     }).catch(err => console.log(err));
 }
 
-
-function deleteFavorite(btn, id) {
+function deleteFavorite(btn, id ) {
     console.log('deleteFavorite', id, btn)
     $.ajax({
         url: 'api/users/deleteFavorite',
         data: { itemId: id },
         method: 'DELETE'
     }).then((res) => {
-        btn.closest('.favorite-item').remove()
+        btn.closest('.card').remove()
+
+        const cards = $('#main-content').find('.card').length
+        if (!cards) {
+            $('#main-content').html(`
+                <div class="col-12 py-2 jcc">
+                    <span class="horizontal-divider"></span>
+                    <h3>No Favorites Saved</h3>
+                </div>
+            `)
+        }
+        
     }).catch(err => console.log(err))
 }
 
 function renderFavorites(items) {
+    console.log('renderFavorites', items)
 
     if (!items.length) {
-        $('#main-content')[0].innerHTML = '<h3>No favorites saved</h3>'
+        $('#main-content').html(`
+            <div class="col-12 py-2 jcc">
+                <span class="horizontal-divider"></span>
+                <h3>No Favorites Saved</h3>
+            </div>
+        `)
         return
     }
 
     const container = $('#main-content')[0]
-    container.innerHTML = ''
+    container.innerHTML = `
+        <div class="col-12 py-2">
+            <span class="horizontal-divider"></span>
+            <h3>Favorites</h3>
+            <div id="fav-container" class="row"></div>
+        </div>
+    `
 
     items.forEach(item => {
         const { id, itemType, itemName, itemData } = item
-        container.innerHTML += `
-            <div class="favorite-item border p-1 mb-1">
-                <h3>${itemName || 'Undefined'}</h3>
-                <img src = "${item.itemImg} "> 
-                <p>${itemType}</p>
-                <p>${id}</p>
-                <button onclick="deleteFavorite(this, ${id})">Delete</button>
+        const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Not Available</button>'
+        $('#fav-container').append(`
+            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+                <div class="card-item">
+                    <h4>${itemName || 'Undefined'}</h4>
+                    <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                    ${actionBtnStr}
+                    <button class="btn btn-secondary" onclick="deleteFavorite(this, ${id})">Remove</button>
+                </div>
             </div>
-        `
+        `)
     })
 }
 
@@ -202,6 +244,31 @@ async function handleBtn(btn) {
     renderFavorites(items)
 }
 
+function getPreviousSearchesFromCookies() {
+    return $.ajax({
+        url: 'api/users/get_prev_searches',
+        method: 'GET'
+    }).then((res) => {
+        console.log('res-------------',res)
+        return [...res.searches]
+    }).catch(err => console.log(err))
+}
+
+async function showPreviousSearchDropdown() {
+    const searches = await getPreviousSearchesFromCookies()
+    if (searches.length == 0) { return }
+
+    console.log('showPreviousSearchDropdown ---------------', $('#prev-search-dropdown'))
+    $('#prev-search-dropdown').empty()
+    searches.forEach(search => {
+        console.log('search', search)
+        $('#prev-search-dropdown').append(`
+            <button class="text-white bg-d1 border-secondary btn btn-sm" onclick="searcher('${search}')">${search}</button>
+        `)
+    })
+  
+}
+
 async function searcher(queryParams) {
     if (queryParams.length == 0) { return }
     try {
@@ -210,7 +277,9 @@ async function searcher(queryParams) {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ query: queryParams.trim() })
-        })
+        }).catch(err => console.log(err) )
+
+        $('#prev-search-dropdown').empty()
 
         $('#movie-content').empty();
         $('#movie-content').html(`
@@ -250,7 +319,7 @@ async function searcher(queryParams) {
         renderBooks(bookData)
         renderMovies(movieData)
     } catch (err) {
-        showMessageInModal(err)
+        console.error('searcher', err)
     }
 }
 
@@ -269,9 +338,13 @@ function searchBtn(e) {
 }
 
 function showMessageInModal(message) {
-    const modalBody = document.querySelector('.message');
-    modalBody.textContent = message;
-    $('#exampleModal').modal('show');
+    $('.modal-body').empty();
+    $('.modal-body').html(`
+        <div class="col-12 py-2 jcc">
+            <h3>${message}</h3>
+        </div>
+    `)
+    $('#exampleModal').modal('show'); 
 }
 
 
@@ -315,4 +388,63 @@ function updatePassword(e) {
         console.log(res)
         window.location.replace('/login')
     }).catch(err => console.log(err))
+}
+
+function loadPasswordForm(e){
+    e.preventDefault()
+    $('.modal-header').empty();
+    $('.modal-body').empty();
+    $('.modal-body').html(`
+        <div class="col-12 py-2 jcc">
+            <h3>Reset Password</h3>
+            <form id="reset-password-form">
+                <div class="form-group ">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" class="form-control" id="current-password" placeholder="Enter current password" required>
+                </div>
+                <div class="form-group ">
+                    <label for="new-password">New Password</label>
+                    <input type="password" class="form-control" id="new-password" placeholder="Enter new password" required>
+                </div>
+                <div class="form-group ">
+                    <label for="repeat-new-password">Repeat New Password</label>
+                    <input type="password" class="form-control" id="repeat-new-password" placeholder="Repeat new password" required>
+                </div>
+                <button type="button" class="submit-btn btn btn-primary">Submit</button>
+            </form>
+        </div>
+    `)
+
+    $('#exampleModal').modal('show')
+
+    $('.submit-btn').on('click', ()=>{
+
+        $('.modal-header').empty();
+
+        const currentPassword = document.querySelector('#current-password').value
+        const newPassword = document.querySelector('#new-password').value
+        const repeatNewPassword = document.querySelector('#repeat-new-password').value
+    
+        if(newPassword!=repeatNewPassword){
+            $('.modal-header').empty();
+            $('.modal-header').html(`<h4 class="modal-title text-warning">New Password and Repeat Password do not match!</h4>`)
+            return
+        }
+
+        $.ajax({
+            url: '/api/users/update_password',
+            data: {currentPassword, newPassword, 'email': $('#email').text()},
+            method: 'PUT'
+        }).then((res) => {
+            console.log(res)
+            showMessageInModal('Password Updated!')
+        }).catch(err => {
+            console.log(err)
+            setTimeout(() => {
+                $('.modal-header').empty();
+                $('.modal-header').html(`<h4 class="modal-title text-warning">${err.responseJSON.message}</h4>`)
+            }, 1000)
+            
+        })
+    })
 }
