@@ -25,7 +25,9 @@
 // <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
 // Western         37
 
+const  placeHldr = 'https://via.placeholder.com/150';
 
+const maxChar = 250;
 // function to generate the movie cards
 function renderMovies(res) {
     const items = [...res.results]
@@ -33,13 +35,21 @@ function renderMovies(res) {
     for (let i = 0; i < items.length; i += 6) {
         let carouselItem = `<div class="carousel-item ${i === 0 ? 'active' : ''}"><div class="row justify-content-center">`;
         for (let j = i; j < i + 6 && j < items.length; j++) {
-            const img = items[j].poster_path ? `https://image.tmdb.org/t/p/w500/${items[j].poster_path}` : 'https://via.placeholder.com/150'
+            const img = items[j].poster_path ? `https://image.tmdb.org/t/p/w500/${items[j].poster_path}` :placeHldr
+            let description = items[j].overview ? items[j].overview : items[j].title;
+
+            if (description.length > maxChar) {
+                description = description.substring(0,maxChar) + '...';
+            }
             carouselItem += `
             <div class="col-md-2">
-                <div class="text-center mb-1">
-                <img class=" img-fluid image-size" src="${img}" alt="Movie Poster">
+                <div class="text-center mb-1 cont">
+                <img class=" img-fluid image-size image" src="${img}" alt="Movie Poster">
+                <div class="overlay">
+                <div class="text">${description}</div>
+                </div>
                 <h4>${items[j].title}</h4>
-                <a target="_blank" href="https://www.justwatch.com/us/search?q=${items[j].title}" class="btn btn-secondary mt-2">Watch Movie</a>
+                <a target="_blank" href="https://www.justwatch.com/us/search?q=${items[j].title}" class="btn btn-secondary mt-2 redir">Watch Movie</a>
                 </div>
             </div>
             `;
@@ -53,18 +63,25 @@ function renderMovies(res) {
 function renderBooks(response) {
 
     const items = [...response.items]
-    let placeHldr = 'https://via.placeholder.com/150'
-
     for (let i = 0; i < items.length; i += 6) {
         let carouselItem = `<div class="carousel-item ${i === 0 ? 'active' : ''}"><div class="row justify-content-center">`;
         for (let j = i; j < i + 6 && j < items.length; j++) {
             let bookImg1 = (items[j].volumeInfo.imageLinks) ? items[j].volumeInfo.imageLinks.thumbnail : placeHldr;
+            let description = items[j].volumeInfo.description ? items[j].volumeInfo.description : items[j].volumeInfo.title;
+
+            if (description.length > maxChar) {
+                description = description.substring(0,maxChar) + '...';
+            }
+
             carouselItem += `
             <div class="col-md-2">
-                <div class="text-center">
-                <img class=" img-fluid image-size" src="${bookImg1}" alt="Book cover">
+                <div class="text-center cont">
+                <img class=" img-fluid image-size image" src="${bookImg1}" alt="Book cover">
+                <div class="overlay">
+                <div class="text">${description}</div>
+                </div>
                 <h4>${items[j].volumeInfo.title}</h4>
-                <a target="_blank" href="${items[j].volumeInfo.previewLink}" class="btn btn-secondary">Read Book</a>
+                <a target="_blank" href="${items[j].volumeInfo.previewLink}" class="btn btn-secondary redir">Read Book</a>
                 </div>
             </div>
             `;
