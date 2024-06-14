@@ -281,6 +281,7 @@ async function searcher(queryParams) {
         }).catch(err => console.log(err) )
 
         $('#prev-search-dropdown').empty()
+        $('#main-content').empty();
 
         $('#movie-content').empty();
         $('#movie-content').html(`
