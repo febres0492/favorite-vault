@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", async function() {
 
     $('#searchBar').on('click', showPreviousSearchDropdown)
-    $('#searchBar').on('focusout', () => $('#prev-search-dropdown').empty())
+    $('#searchBar').on('focusout', () => {
+        setTimeout(() => {
+            $('#searchDropdown').hide()
+        }, 100)
+    })
     
     const favorites = await getFavorites()
     

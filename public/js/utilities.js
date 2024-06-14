@@ -41,7 +41,7 @@ function renderMovies(res)  {
     items.forEach(item => {
         const imgUrl = item.poster_path ? `https://image.tmdb.org/t/p/w500/${item.poster_path}` : '/img/placeholder.png'
         $('#movies').append(`
-            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
                     <h4 class="card-title">${item.title || 'Unknown'}</h4>
                     <img src="${imgUrl}" alt="Book cover for ${item.title || 'unknown'}">
@@ -73,7 +73,7 @@ function renderBooks(response) {
 
         let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : '/img/placeholder.png';
         container.innerHTML += `
-            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
                     <h4 class="card-title">${item.volumeInfo.title}</h4>
                     <img src="${bookImg1}" alt="Book cover for ${item.volumeInfo.title}">
@@ -181,7 +181,7 @@ function renderFavorites(items) {
         const { id, itemType, itemName, itemData } = item
         const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Not Available</button>'
         $('#fav-container').append(`
-            <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
                     <h4>${itemName || 'Undefined'}</h4>
                     <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
@@ -205,7 +205,6 @@ function getPreviousSearchesFromCookies() {
         url: 'api/users/get_prev_searches',
         method: 'GET'
     }).then((res) => {
-        console.log('res-------------',res)
         return [...res.searches]
     }).catch(err => console.log(err))
 }
@@ -214,19 +213,17 @@ async function showPreviousSearchDropdown() {
     const searches = await getPreviousSearchesFromCookies()
     if (searches.length == 0) { return }
 
-    console.log('showPreviousSearchDropdown ---------------', $('#prev-search-dropdown'))
     $('#prev-search-dropdown').empty()
     searches.forEach(search => {
-        console.log('search', search)
         $('#prev-search-dropdown').append(`
-            <button class="text-white bg-d1 border-secondary btn btn-sm" onclick="searcher('${search}')">${search}</button>
+            <button type="button" class="text-white bg-d1 border-secondary btn btn-sm" onclick="searcher('${search}')">${search}</button>
         `)
     })
-  
 }
 
 async function searcher(queryParams) {
     if( queryParams.length == 0 ) {return} 
+    console.log('searcher >>>>>>', queryParams)
     try {
         const { movieData, bookData } = await $.ajax({
             url: 'api/external',
