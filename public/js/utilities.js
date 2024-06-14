@@ -27,6 +27,16 @@
 
 // function to generate the movie cards
 function renderMovies(res)  {
+
+    if (!res.results.length) {
+        $('#movies').html(`
+            <div class="col-12 py-2 jcc">
+                <h3>No Movies Found</h3>
+            </div>
+        `)
+        return
+    }
+
     const items = [...res.results]
     items.forEach(item => {
         const imgUrl = item.poster_path ? `https://image.tmdb.org/t/p/w500/${item.poster_path}` : '/img/placeholder.png'
@@ -45,15 +55,23 @@ function renderMovies(res)  {
 
 function renderBooks(response) {
 
+    if (!response.items) {
+        $('#books').html(`
+            <div class="col-12 py-2 jcc">
+                <h3>No Books Found</h3>
+            </div>
+        `)
+        return
+    }
+
     const container = document.getElementById('books')
     container.innerHTML = ''
-    let placeHldr = 'https://via.placeholder.com/150'
 
     for (var i = 0; i < response.items.length; i++) {
         let item = response.items[i]
         let viewUrl = item.volumeInfo.previewLink
 
-        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
+        let bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : '/img/placeholder.png';
         container.innerHTML += `
             <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
@@ -161,7 +179,7 @@ function renderFavorites(items) {
 
     items.forEach(item => {
         const { id, itemType, itemName, itemData } = item
-        const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Open</button>'
+        const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Not Available</button>'
         $('#fav-container').append(`
             <div class="card col-sm-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
@@ -182,6 +200,31 @@ async function handleBtn(btn){
     renderFavorites(items)
 }
 
+function getPreviousSearchesFromCookies() {
+    return $.ajax({
+        url: 'api/users/get_prev_searches',
+        method: 'GET'
+    }).then((res) => {
+        console.log('res-------------',res)
+        return [...res.searches]
+    }).catch(err => console.log(err))
+}
+
+async function showPreviousSearchDropdown() {
+    const searches = await getPreviousSearchesFromCookies()
+    if (searches.length == 0) { return }
+
+    console.log('showPreviousSearchDropdown ---------------', $('#prev-search-dropdown'))
+    $('#prev-search-dropdown').empty()
+    searches.forEach(search => {
+        console.log('search', search)
+        $('#prev-search-dropdown').append(`
+            <button class="text-white bg-d1 border-secondary btn btn-sm" onclick="searcher('${search}')">${search}</button>
+        `)
+    })
+  
+}
+
 async function searcher(queryParams) {
     if( queryParams.length == 0 ) {return} 
     try {
@@ -190,7 +233,9 @@ async function searcher(queryParams) {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ query: queryParams.trim() })
-        }).catch(err => showMessageInModal(err) )
+        }).catch(err => console.log(err) )
+
+        $('#prev-search-dropdown').empty()
 
         $('#main-content').empty();
         $('#main-content').html(`

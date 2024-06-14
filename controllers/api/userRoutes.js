@@ -3,6 +3,7 @@ const { User, Favorites } = require('../../models');
 const c = require('../../utils/helpers').c
 const bcrypt = require('bcrypt')
 
+// logging in the user
 router.post('/login', async (req, res) => {
     try {
         const userData = await User.findOne({ where: { email: req.body.email } });
@@ -35,8 +36,9 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-});
+})
 
+// logging out the user
 router.post('/logout', (req, res) => {
     if (req.session.logged_in) {
         req.session.destroy(() => {
@@ -45,8 +47,9 @@ router.post('/logout', (req, res) => {
     } else {
         res.status(404).end();
     }
-});
+})
 
+// creating a new user
 router.post('/signup', async (req, res) => {
     console.log('req.body', req.body)
     try {
@@ -98,8 +101,7 @@ router.get('/getFavorites', async (req, res) => {
         console.log('err', err)
         res.status(500).json({ message: 'An error while getting favorites', error: err })
     }
-});
-
+})
 
 //addding item to user's favorites
 router.post('/addFavorite', async (req, res) => {
@@ -134,6 +136,7 @@ router.delete('/deleteFavorite', async (req, res) => {
     }
 })
 
+// updating user's password when logged in
 router.put('/update_password', async (req, res) => {
     const currentUser = await User.findOne({ where: { email: req.body.email } });
     if (!currentUser) {
@@ -161,5 +164,11 @@ router.put('/update_password', async (req, res) => {
     return res.status(200).json({ message: 'Password Updated' });
 })
 
+// getting user's previous searches
+router.get('/get_prev_searches', (req, res) => {
+    const previousSearches = req.session.previousSearches || []
+    console.log(c('previousSearches'), previousSearches)
+    res.status(200).json({ searches: previousSearches })
+})
 
 module.exports = router;

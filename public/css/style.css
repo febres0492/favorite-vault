@@ -1,6 +1,7 @@
 :root {
     --accent-color-1: hsl(258, 58%, 42%);
     --accent-color-2: hsl(266, 61%, 11%);
+    --accent-color-3: hsl(258, 58%, 21%);
     --l1: hsl(0, 0%, 100%, 0.1);
     --l2: hsl(0, 0%, 100%, 0.2);
     --d1: hsl(0, 0%, 0%, 0.1);
@@ -119,4 +120,19 @@ body {
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+}
+
+#prev-search-dropdown {
+    position: absolute;
+    gap: .2em;
+    background-color: var(--accent-color-3);
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid var(--l2);
+    border-top: none;
+    border-radius: 0 0 .4rem .4rem;
+    z-index: 1;
+    max-height: 20rem;
+    overflow-y: auto;
 }

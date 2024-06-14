@@ -2,7 +2,7 @@ const router = require('express').Router()
 const fetch = require('node-fetch')
 const movieApiKey = process.env.MOVIEAPIKEY
 const bookApiKey = process.env.B_APIKEY
-const c = require('../../utils/helpers').c
+const { c, saveQueryToCookie} = require('../../utils/helpers')
 
 router.post('/', async (req, res) => {
     console.log(c('testing external api route'), req.body)
@@ -21,11 +21,12 @@ router.post('/', async (req, res) => {
         let bookData = {title: 'No books found'}
         if (booksRes.ok) { bookData = await booksRes.json() }
 
-        console.log(c('movieData'), bookData)
+        saveQueryToCookie(req, query)
+
         res.status(200).json({ movieData, bookData })
     } catch (err) {
         console.error('Error:', err)
-        res.status(400).json({ error: err.message })
+        res.status(400).json({ error: err.message})
     }
 })
 

@@ -5,19 +5,13 @@ function c(str='null', color = 'g'){ // this function is to color the console.lo
 }
 
 module.exports = {
-
     c: c,
-
-    get_emoji: () => {
-        const randomNum = Math.random();
-        let book = "📗";
-
-        if (randomNum > 0.7) {
-            book = "📘";
-        } else if (randomNum > 0.4) {
-            book = "📙";
-        }
-
-        return `<span for="img" aria-label="book">${book}</span>`;
-    },
+    saveQueryToCookie: (req, query) => {
+        let previousSearches = req.session.previousSearches || [];
+        if (previousSearches.includes(query)) { return } 
+        console.log(c('saveQueryToCookie'), query)
+        previousSearches.push(query)
+        req.session.previousSearches = previousSearches
+        console.log(c('previousSearches'), req.session.previousSearches)
+    }
 };
