@@ -52,12 +52,13 @@ function renderMovies(res) {
             carouselItem += `
             <div class="col-md-2">
                 <div class="text-center mb-1 cont">
-                <img class=" img-fluid image-size image" src="${img}" alt="Movie Poster">
+                <img class=" img-fluid image" id="image-size" src="${img}" alt="Movie Poster">
                 <div class="overlay">
                 <div class="text">${description}</div>
                 </div>
                 <h4>${items[j].title}</h4>
                 <a target="_blank" href="https://www.justwatch.com/us/search?q=${items[j].title}" class="btn btn-secondary mt-2 redir">Watch Movie</a>
+                <button class="btn btn-primary result-item redir" onclick="saveItem(this,'movie')">Add to Favorite</button>
                 </div>
             </div>
             `;
@@ -91,12 +92,13 @@ function renderBooks(response) {
             carouselItem += `
             <div class="col-md-2">
                 <div class="text-center cont">
-                <img class=" img-fluid image-size image" src="${bookImg1}" alt="Book cover">
+                <img class=" img-fluid image" id="image-size" src="${bookImg1}" alt="Book cover">
                 <div class="overlay">
                 <div class="text">${description}</div>
                 </div>
                 <h4>${items[j].volumeInfo.title}</h4>
                 <a target="_blank" href="${items[j].volumeInfo.previewLink}" class="btn btn-secondary redir">Read Book</a>
+                <button class="btn btn-primary result-item redir" onclick="saveItem(this,'book')">Add to Favorite</button>
                 </div>
             </div>
             `;

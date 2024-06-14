@@ -49,12 +49,6 @@ body {
     right: 0; 
 }
 
-.image-size {
-    width: 212px;
-    height: 317px;
-    object-fit: cover;
-}
-
 .overlay {
     position: absolute;
     top: 0;
@@ -194,4 +188,10 @@ body {
     z-index: 1;
     max-height: 20rem;
     overflow-y: auto;
+}
+
+#image-size {
+    width: 212px;
+    height: 317px;
+    object-fit: cover;
 }
