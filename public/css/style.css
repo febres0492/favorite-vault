@@ -40,15 +40,6 @@ body {
     button { color: white; }
 }
 
-.carousel-control-prev {
-    width: 30px;
-    left: 0; 
-}
-.carousel-control-next {
-    width: 30px;
-    right: 0; 
-}
-
 .overlay {
     position: absolute;
     top: 0;
@@ -173,6 +164,16 @@ body {
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+}
+
+#prev {
+    width: 30px;
+    left: 0; 
+}
+
+#next {
+    width: 30px;
+    right: 0; 
 }
 
 #prev-search-dropdown {

@@ -25,7 +25,7 @@
 // <a target="_blank" href="https://www.justwatch.com/us/search?q=${item.title}" class="btn btn-secondary">Watch Movie</a>
 // Western         37
 
-const  placeHldr = 'https://via.placeholder.com/150';
+const  placeHldr = '/img/placeholder.png';
 
 const maxChar = 250;
 // function to generate the movie cards
@@ -132,19 +132,19 @@ function renderBooks(response) {
 }
 
 function saveItem (element, type) {
-    $(element).text('Saved')
-    $(element).attr('disabled', true)
+    $(element).text('Saved');
+    $(element).attr('disabled', true);
 
-    const itemName = $(element).closest('.card').find('.card-title').text();
-    const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
-    const actionBtnStr = $(element).closest('.card').find('.action-btn').prop('outerHTML')
-    
+    const itemName = $(element).closest('.cont').find('h4').text();
+    const imgUrl = $(element).closest('.cont').find('.image').attr('src');
+    const actionBtnStr = $(element).closest('.cont').find('.redir').prop('outerHTML');
+
     saveToFavorite({
         itemType: type,
         itemName: itemName,
         itemData: JSON.stringify({ "actionBtnStr": actionBtnStr }),
         itemImg: imgUrl
-    })
+    });
 }
 
 function saveToFavorite(obj) {
@@ -268,7 +268,6 @@ async function showPreviousSearchDropdown() {
             <button class="text-white bg-d1 border-secondary btn btn-sm" onclick="searcher('${search}')">${search}</button>
         `)
     })
-  
 }
 
 async function searcher(queryParams) {
@@ -289,11 +288,11 @@ async function searcher(queryParams) {
             <div id="carouselMovieControls" class="carousel slide" data-ride="carousel" data-interval="false">
                 <div class="carousel-inner" id="movies">
                 </div>
-                <a class="carousel-control-prev d-flex justify-content-start" href="#carouselMovieControls" role="button" data-slide="prev">
+                <a class="carousel-control-prev d-flex justify-content-start" id="prev" href="#carouselMovieControls" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a class="carousel-control-next d-flex justify-content-end" href="#carouselMovieControls" role="button" data-slide="next">
+                <a class="carousel-control-next d-flex justify-content-end" id="next" href="#carouselMovieControls" role="button" data-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -306,11 +305,11 @@ async function searcher(queryParams) {
             <div id="carouselBooksControls" class="carousel slide" data-ride="carousel" data-interval="false">
                 <div class="carousel-inner" id="books">
                 </div>
-                <a class="carousel-control-prev d-flex justify-content-start" href="#carouselBooksControls" role="button" data-slide="prev">
+                <a class="carousel-control-prev d-flex justify-content-start" id="prev" href="#carouselBooksControls" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a class="carousel-control-next d-flex justify-content-end" href="#carouselBooksControls" role="button" data-slide="next">
+                <a class="carousel-control-next d-flex justify-content-end" id="next" href="#carouselBooksControls" role="button" data-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
