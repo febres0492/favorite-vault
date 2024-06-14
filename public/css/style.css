@@ -27,7 +27,9 @@ body {
 .bg-d1 { background-color: hsl(0, 0%, 0%, 0.1); }
 .bg-d2 { background-color: hsl(0, 0%, 0%, 0.2); }
 
-
+.car-head:hover {
+    color: yellow;
+}
 
 .text-white{
     input { color: white; }

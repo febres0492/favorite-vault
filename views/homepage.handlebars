@@ -1,22 +1,29 @@
-<section class="container-fluid p-0">
+<section class="container-fluid align-self-start text-white p-0" style="--bg-l:.1;">
     <div class="row">
         {{> sidebar}}
         <main class="col border">
-            <h4>homepage</h4>
+            <h4 class="mt-1">homepage</h4>
             <p>Welcome to the homepage</p>
 
             <form class="form search-form">
-                <input id="searchBar" type="text" name="search"  
-                    placeholder="Search for Movies or Books ..." onkeydown="searchInput(event)"
-                >
-                <button type="button" id="search-button" onclick="searchBtn(event)">search</i></button>
+                <input id="searchBar" type="text" name="search" class="text-dark"
+                    placeholder="Search for Movies or Books ..." onkeydown="searchInput(event)">
+                <button class="btn bg-secondary" type="button" id="search-button" onclick="searchBtn(event)"><i
+                        class="fas fa-search"></i></button>
             </form>
 
-            <div id="main-content" class="row">
-            </div>
         </main>
+    </div>
 
+    <div class="row justify-content-center mt-4 border-bottom border-secondary">
+        <div class="col" id="movie-content">
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col" id="book-content">
+        </div>
     </div>
 </section>
+
 <script src="/js/homepage.js"></script>
 <script src="/js/utilities.js"></script>
