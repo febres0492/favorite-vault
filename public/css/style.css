@@ -35,3 +35,8 @@ body {
     input { color: white; }
     button { color: white; }
 }
+
+.image-size {
+    width: 212px;
+    height: 317px;
+}

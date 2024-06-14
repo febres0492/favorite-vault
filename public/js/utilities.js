@@ -33,11 +33,12 @@ function renderMovies(res) {
     for (let i = 0; i < items.length; i += 6) {
         let carouselItem = `<div class="carousel-item ${i === 0 ? 'active' : ''}"><div class="row justify-content-center">`;
         for (let j = i; j < i + 6 && j < items.length; j++) {
+            const img = items[j].poster_path ? `https://image.tmdb.org/t/p/w500/${items[j].poster_path}` : 'https://via.placeholder.com/150'
             carouselItem += `
             <div class="col-md-2">
                 <div class="text-center mb-1">
-                <img class=" img-fluid w-75 h-100" src="https://image.tmdb.org/t/p/w500/${items[j].poster_path}" alt="Movie Poster">
-                <h5>${items[j].title}</h5>
+                <img class=" img-fluid image-size" src="${img}" alt="Movie Poster">
+                <h4>${items[j].title}</h4>
                 <a target="_blank" href="https://www.justwatch.com/us/search?q=${items[j].title}" class="btn btn-secondary mt-2">Watch Movie</a>
                 </div>
             </div>
@@ -61,8 +62,8 @@ function renderBooks(response) {
             carouselItem += `
             <div class="col-md-2">
                 <div class="text-center">
-                <img class=" img-fluid w-75 h-100" src="${bookImg1}" alt="Book cover">
-                <h5>${items[j].volumeInfo.title}</h5>
+                <img class=" img-fluid image-size" src="${bookImg1}" alt="Book cover">
+                <h4>${items[j].volumeInfo.title}</h4>
                 <a target="_blank" href="${items[j].volumeInfo.previewLink}" class="btn btn-secondary">Read Book</a>
                 </div>
             </div>
