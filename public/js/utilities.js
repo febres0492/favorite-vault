@@ -27,30 +27,20 @@
 // function to generate the movie cards
 function renderMovies(res)  {
 
-    if (!res.results.length) {
-        $('#main-content').append(`
-            <div class="col-12 py-2 px-3">
-                <span class="horizontal-divider"></span>
-                <h3>Movies</h3>
-                <div id="movies" class="row">
-                    <div class="col-12 py-2 jcc">
-                        h3>No Movies Found</h3>
-                    </div>
-                </div>
-            </div>
-        `)
-        return
-    }
-
     $('#main-content').append(`
-        <div class="col-12 py-2 px-3">
+        <div class="col-12 py-2 px-3 tac">
             <span class="horizontal-divider"></span>
-            <h3>Movies</h3>
+            <h3 class="movie-header" style="--fvw:1;">Movies</h3>
         </div>
         <div class="col-12 py-2 px-0">
             <div id="movies" class="row"></div>
         </div>
     `)
+
+    if (!res.results.length) {
+        $('.movie-header').text(`No Movies Found`)
+        return
+    }
 
     const items = [...res.results]
     items.forEach(item => {
@@ -76,30 +66,20 @@ function renderMovies(res)  {
 
 function renderBooks(response) {
 
-    if (!response.items) {
-        $('#main-content').append(`
-            <div class="col-12 py-2 px-3">
-                <span class="horizontal-divider"></span>
-                <h3>Books</h3>
-                <div id="books" class="row">
-                    <div class="col-12 py-2 jcc">
-                        <h3>No Books Found</h3>
-                    </div>
-                </div>
-            </div>
-        `)
-        return
-    }
-
     $('#main-content').append(`
-        <div class="col-12 py-2 px-3">
+        <div class="col-12 py-2 px-3 tac">
             <span class="horizontal-divider"></span>
-            <h3>Books</h3>
+            <h3 class="book-header" style="--fvw:1;">Books</h3>
         </div>
         <div class="col-12 py-2 px-0">
             <div id="books" class="row"></div>
         </div>
     `)
+
+    if (!response.items.length) {
+        $('.book-header').text(`No Movies Found`)
+        return
+    }
 
     const container = document.getElementById('books')
     container.innerHTML = ''
@@ -107,9 +87,6 @@ function renderBooks(response) {
     for (var i = 0; i < response.items.length; i++) {
         let item = response.items[i]
         let viewUrl = item.volumeInfo.previewLink
-        const dataStr = JSON.stringify(item)
-
-        
 
         let bookImg1 = item.volumeInfo?.imageLinks?.thumbnail || '/img/placeholder.png';
         let description = item.volumeInfo?.description || item.volumeInfo?.title;
@@ -131,21 +108,24 @@ function renderBooks(response) {
     }
 }
 
-function saveItem (element, type) {
-    $(element).text('Saved')
-    $(element).attr('disabled', true)
+async function saveItem (element, type) {
+    
     const description = $(element).closest('.card').attr('data-description')
-    console.log('escription -------------', description )
     const itemName = $(element).closest('.card').find('.card-title').text();
     const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
     const actionBtnStr = $(element).closest('.card').find('.action-btn').prop('outerHTML')
-    
-    saveToFavorite({
+    const data = { "description": description, "actionBtnStr": actionBtnStr}
+
+    const isSaved = await saveToFavorite({
         itemType: type,
         itemName: itemName,
-        itemData: JSON.stringify({ "description": description, "actionBtnStr": actionBtnStr}),
+        itemData: data,
         itemImg: imgUrl
     })
+
+    if (!isSaved) { return }
+    $(element).text('Saved')
+    $(element).attr('disabled', true)
 }
 
 function saveToFavorite(obj) {
@@ -160,13 +140,17 @@ function saveToFavorite(obj) {
         }
     })
 
-    $.ajax({
+    return $.ajax({
         url: 'api/users/addFavorite',
         data: obj,
         method: 'POST'
     }).then((res) => {
         console.log('saveToFavorite', res)
-    }).catch(err => console.log(err))
+        return true
+    }).catch(err => {
+        console.log(err)
+        return false
+    })
 }
 
 function getFavorites(type = 'all') {
@@ -181,7 +165,6 @@ function getFavorites(type = 'all') {
 }
 
 function deleteFavorite(btn, id ) {
-    console.log('deleteFavorite', id, btn)
     $.ajax({
         url: 'api/users/deleteFavorite',
         data: { itemId: id},
@@ -203,13 +186,12 @@ function deleteFavorite(btn, id ) {
 }
 
 function renderFavorites(items) {
-    console.log('renderFavorites', items)
 
     if (!items.length) {
         $('#main-content').html(`
-            <div class="col-12 py-2 jcc">
+            <div class="col-12 py-2 jcc tac" >
                 <span class="horizontal-divider"></span>
-                <h3>No Favorites Saved</h3>
+                <h3 style="--fvw:1; --mt:10;">No Favorites Saved</h3>
             </div>
         `)
         return
@@ -228,11 +210,8 @@ function renderFavorites(items) {
 
     items.forEach((item, i) => {
         const { id, itemType, itemName, itemData } = item
-        if(i == 0){
-            console.log('item', JSON.parse(itemData))
-        }
-        const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Not Available</button>'
-        const description = JSON.parse(itemData).description || itemName
+        const actionBtnStr = jsonParser(itemData, 'actionBtnStr', '<button class="btn border text-white disabled">Not Available</button>')
+        const description = jsonParser(itemData, 'description', itemName)
         $('#fav-container').append(`
             <div class="card col-12 col-sm-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
@@ -252,9 +231,7 @@ function renderFavorites(items) {
 }
 
 async function handleBtn(btn){
-    console.log('button clicked', btn.value)
     const items = await getFavorites(btn.value)
-    console.log('items', items)
     $('#searchBar').val('')
     renderFavorites(items)
 }
@@ -282,7 +259,6 @@ async function showPreviousSearchDropdown() {
 
 async function searcher(queryParams) {
     if( queryParams.length == 0 ) {return} 
-    console.log('searcher >>>>>>', queryParams)
     try {
         const { movieData, bookData } = await $.ajax({
             url: 'api/external',
@@ -292,9 +268,7 @@ async function searcher(queryParams) {
         }).catch(err => console.log(err) )
 
         $('#prev-search-dropdown').empty()
-
         $('#searchBar').val(queryParams)
-
         $('#main-content').empty();
         $('#main-content').html(`
             <div class="col-12 pt-4 jcc d-flex aic">
@@ -371,7 +345,6 @@ function updatePassword(e){
         data: {email, token, newPassword},
         method: 'PUT'
     }).then((res) => {
-        console.log(res)
         window.location.replace('/login')
     }).catch(err => console.log(err))
 }
@@ -422,10 +395,8 @@ function loadPasswordForm(e){
             data: {currentPassword, newPassword, 'email': $('#email').text()},
             method: 'PUT'
         }).then((res) => {
-            console.log(res)
             showMessageInModal('Password Updated!')
         }).catch(err => {
-            console.log(err)
             setTimeout(() => {
                 $('.modal-header').empty();
                 $('.modal-header').html(`<h4 class="modal-title text-warning">${err.responseJSON.message}</h4>`)
@@ -433,4 +404,12 @@ function loadPasswordForm(e){
             
         })
     })
+}
+
+function jsonParser(jsonStr, key, fallback) {
+    try {
+        return JSON.parse(jsonStr)[key]
+    } catch (err) {
+        return fallback
+    }
 }

@@ -106,7 +106,7 @@ router.post('/addFavorite', async (req, res) => {
             userId: req.session.user_id,
             ...req.body
         }
-        console.log(c('item'), item)
+        item.itemData = JSON.stringify(item.itemData)
 
         const fabItem = await Favorites.create(item)
         res.status(200).json(fabItem)
