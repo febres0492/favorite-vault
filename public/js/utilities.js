@@ -413,3 +413,19 @@ function jsonParser(jsonStr, key, fallback) {
         return fallback
     }
 }
+
+function resetDB(password) {
+    $.ajax({
+        url: 'api/users/reset_db',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ password }),
+        success: function(response) {
+            console.log(response.message)
+            alert( `table dropped successfully`)
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error)
+        }
+    });
+}

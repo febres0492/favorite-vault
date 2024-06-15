@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { User, Favorites } = require('../../models');
 const c = require('../../utils/helpers').c
 const bcrypt = require('bcrypt')
+const sequelize = require('../../config/connection')
 
 // logging in the user
 router.post('/login', async (req, res) => {
@@ -164,6 +165,26 @@ router.get('/get_prev_searches', (req, res) => {
     const previousSearches = req.session.previousSearches || []
     console.log(c('previousSearches'), previousSearches)
     res.status(200).json({ searches: previousSearches })
+})
+
+// resetting favorites database
+router.post('/reset_db', async (req, res) => {
+    const { password } = req.body
+
+    if (!password || password !== process.env.ADMIN_PASSWORD) {
+        return res.status(403).json({ message: 'Invalid password' })
+    }
+
+    try {
+        console.log(c('reset model', 'g'), 'Favorites')
+        await Favorites.drop()
+        await Favorites.sync()
+
+        res.status(200).json({ message: 'Favorites table recreated successfully' })
+    } catch (err) {
+        console.log('err', err)
+        res.status(400).json(err)
+    }
 })
 
 module.exports = router;
