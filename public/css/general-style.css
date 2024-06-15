@@ -135,7 +135,6 @@ p, span, a, button, li {font-size:calc( 1rem + min(var(--max-fvw), calc(var(--fv
 
 [style*=--col] {
     display: flex;
-    flex-wrap: wrap;
     gap: var(--g, 16px);
     width: 100%;
     flex: 1 0 0%;
@@ -177,7 +176,7 @@ p, span, a, button, li {font-size:calc( 1rem + min(var(--max-fvw), calc(var(--fv
 
 [style*=--w\:] { width: var(--w) }
 [style*=--minw\:] { min-width: var(--minw) }
-[style*=--maxw\:] { max-width: var(--maxw) }
+[style*=--maxw\:] { max-width: var(--maxw); }
 
 [style*=--h\:] { height: var(--h) }
 [style*=--minh\:] { min-height: var(--minh) }

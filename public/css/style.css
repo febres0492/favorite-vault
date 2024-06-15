@@ -80,6 +80,15 @@ body {
     z-index: 3;
     margin-top: 10px;
 }
+.carousel-control-prev {
+    width: 30px;
+    left: 0; 
+}
+.carousel-control-next {
+    width: 30px;
+    right: 0; 
+}
+
 .dropbtn {
     font-size: 16px;
     border: none;
@@ -196,3 +205,34 @@ body {
     height: 317px;
     object-fit: cover;
 }
+.overlay {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: transparent;
+    z-index: 1; 
+    overflow: hidden;
+}
+
+.description-box:hover .overlay {
+    opacity: 1;
+    background-color: rgb(69, 79, 122);
+}
+
+.text {
+    color: white;
+    font-size: 13px;
+    text-align: center;
+    padding: 10px;
+    z-index: 2;
+}
+
+@media (min-width: 400px) and (max-width: 575px) {
+    .card {
+        max-width: calc((100% / 12) * 6);
+    }
+}
+

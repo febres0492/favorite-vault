@@ -31,11 +31,7 @@ const maxChar = 250;
 // function to generate the movie cards
 function renderMovies(res) {
     if (!res.results.length) {
-        $('#movies').html(`
-            <div class="col-12 py-2 jcc">
-                <h3>No Movies Found</h3>
-            </div>
-        `)
+        $('.movie-header').text(`No Movies Found`)
         return
     }
     const items = [...res.results]
@@ -131,20 +127,24 @@ function renderBooks(response) {
 
 }
 
-function saveItem (element, type) {
-    $(element).text('Saved');
-    $(element).attr('disabled', true);
+async function saveItem (element, type) {
+    
+    const description = $(element).closest('.card').attr('data-description')
+    const itemName = $(element).closest('.card').find('.card-title').text();
+    const imgUrl =  $(element).closest('.card').find('img')[0].attributes.src.nodeValue
+    const actionBtnStr = $(element).closest('.card').find('.action-btn').prop('outerHTML')
+    const data = { "description": description, "actionBtnStr": actionBtnStr}
 
-    const itemName = $(element).closest('.cont').find('h4').text();
-    const imgUrl = $(element).closest('.cont').find('.image').attr('src');
-    const actionBtnStr = $(element).closest('.cont').find('.redir').prop('outerHTML');
-
-    saveToFavorite({
+    const isSaved = await saveToFavorite({
         itemType: type,
         itemName: itemName,
-        itemData: JSON.stringify({ "actionBtnStr": actionBtnStr }),
+        itemData: data,
         itemImg: imgUrl
-    });
+    })
+
+    if (!isSaved) { return }
+    $(element).text('Saved')
+    $(element).attr('disabled', true)
 }
 
 function saveToFavorite(obj) {
@@ -159,13 +159,17 @@ function saveToFavorite(obj) {
         }
     })
 
-    $.ajax({
+    return $.ajax({
         url: 'api/users/addFavorite',
         data: obj,
         method: 'POST'
     }).then((res) => {
         console.log('saveToFavorite', res)
-    }).catch(err => console.log(err))
+        return true
+    }).catch(err => {
+        console.log(err)
+        return false
+    })
 }
 
 function getFavorites(type = 'all') {
@@ -180,7 +184,6 @@ function getFavorites(type = 'all') {
 }
 
 function deleteFavorite(btn, id ) {
-    console.log('deleteFavorite', id, btn)
     $.ajax({
         url: 'api/users/deleteFavorite',
         data: { itemId: id },
@@ -202,13 +205,12 @@ function deleteFavorite(btn, id ) {
 }
 
 function renderFavorites(items) {
-    console.log('renderFavorites', items)
 
     if (!items.length) {
         $('#main-content').html(`
-            <div class="col-12 py-2 jcc">
+            <div class="col-12 py-2 jcc tac" >
                 <span class="horizontal-divider"></span>
-                <h3>No Favorites Saved</h3>
+                <h3 style="--fvw:1; --mt:10;">No Favorites Saved</h3>
             </div>
         `)
         return
@@ -218,19 +220,27 @@ function renderFavorites(items) {
     container.innerHTML = `
         <div class="col-12 py-2">
             <span class="horizontal-divider"></span>
-            <h3>Favorites</h3>
+            <h2>Favorites</h2>
+        </div>
+        <div class="col-12 py-2 p-0">
             <div id="fav-container" class="row"></div>
         </div>
     `
 
-    items.forEach(item => {
+    items.forEach((item, i) => {
         const { id, itemType, itemName, itemData } = item
-        const actionBtnStr = JSON.parse(itemData).actionBtnStr || '<button class="btn border text-white disabled">Not Available</button>'
+        const actionBtnStr = jsonParser(itemData, 'actionBtnStr', '<button class="btn border text-white disabled">Not Available</button>')
+        const description = jsonParser(itemData, 'description', itemName)
         $('#fav-container').append(`
-            <div class="card col-6 col-md-4 col-lg-3 col-xl-2 p-3 mb-3">
+            <div class="card col-12 col-sm-4 col-lg-3 col-xl-2 p-3 mb-3">
                 <div class="card-item">
                     <h4>${itemName || 'Undefined'}</h4>
-                    <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                    <div class="rel description-box">
+                        <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                        <div class="overlay df jcc">
+                            <p class="text">${description}</p>
+                        </div>
+                    </div>
                     ${actionBtnStr}
                     <button class="btn btn-secondary" onclick="deleteFavorite(this, ${id})">Remove</button>
                 </div>
@@ -244,7 +254,7 @@ async function handleBtn(btn) {
     $('#book-content').empty();
     console.log('button clicked', btn.value)
     const items = await getFavorites(btn.value)
-    console.log('items', items)
+    $('#searchBar').val('')
     renderFavorites(items)
 }
 
@@ -271,7 +281,6 @@ async function showPreviousSearchDropdown() {
 
 async function searcher(queryParams) {
     if( queryParams.length == 0 ) {return} 
-    console.log('searcher >>>>>>', queryParams)
     try {
         const { movieData, bookData } = await $.ajax({
             url: 'api/external',
@@ -281,13 +290,14 @@ async function searcher(queryParams) {
         }).catch(err => console.log(err) )
 
         $('#prev-search-dropdown').empty()
-
         $('#searchBar').val(queryParams)
 
-        $('#main-content').empty();
-
-        $('#movie-content').empty();
-        $('#movie-content').html(`
+        $('#main-content').html(`
+            <div class="col-12 pt-4 jcc d-flex aic">
+                <h3 class="m-0">Search Results for:</h3>
+                <p class="m-0 h3 ml-2 p-1 px-2 rounded bg-d2">${queryParams}</p>
+            </div>`)
+        $('#movie-content').append(`
             <h3 class="mb-2 car-head" style=" --fw:900">Movies</h3>
             <div id="carouselMovieControls" class="carousel slide" data-ride="carousel" data-interval="false">
                 <div class="carousel-inner" id="movies">
@@ -300,7 +310,6 @@ async function searcher(queryParams) {
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
-            </div>
         `);
         
         $('#book-content').empty();
@@ -321,8 +330,8 @@ async function searcher(queryParams) {
         `);
 
 
-        renderBooks(bookData)
         renderMovies(movieData)
+        renderBooks(bookData)
     } catch (err) {
         console.error('searcher', err)
     }
@@ -390,7 +399,6 @@ function updatePassword(e) {
         data: { email, token, newPassword },
         method: 'PUT'
     }).then((res) => {
-        console.log(res)
         window.location.replace('/login')
     }).catch(err => console.log(err))
 }
@@ -398,7 +406,6 @@ function updatePassword(e) {
 function loadPasswordForm(e){
     e.preventDefault()
     $('.modal-header').empty();
-    $('.modal-body').empty();
     $('.modal-body').html(`
         <div class="col-12 py-2 jcc">
             <h3>Reset Password</h3>
@@ -441,10 +448,8 @@ function loadPasswordForm(e){
             data: {currentPassword, newPassword, 'email': $('#email').text()},
             method: 'PUT'
         }).then((res) => {
-            console.log(res)
             showMessageInModal('Password Updated!')
         }).catch(err => {
-            console.log(err)
             setTimeout(() => {
                 $('.modal-header').empty();
                 $('.modal-header').html(`<h4 class="modal-title text-warning">${err.responseJSON.message}</h4>`)
@@ -452,4 +457,12 @@ function loadPasswordForm(e){
             
         })
     })
+}
+
+function jsonParser(jsonStr, key, fallback) {
+    try {
+        return JSON.parse(jsonStr)[key]
+    } catch (err) {
+        return fallback
+    }
 }

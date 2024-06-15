@@ -28,7 +28,7 @@ Favorites.init(
             allowNull: false
         },
         itemData: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         itemImg:{
