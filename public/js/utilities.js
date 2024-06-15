@@ -52,7 +52,7 @@ function renderMovies(res)  {
                     <h4 class="card-title">${item.title || 'Unknown'}</h4>
                     <div class="rel description-box">
                         <img src="${imgUrl}" alt="Book cover for ${item.title || 'unknown'}">
-                        <div class="overlay df jcc">
+                        <div class="overlay scroll-bar df jcc">
                             <p class="text description">${description}</p>
                         </div>
                     </div>
@@ -96,7 +96,7 @@ function renderBooks(response) {
                     <h4 class="card-title">${item.volumeInfo.title}</h4>
                     <div class="rel description-box">
                         <img src="${bookImg1}" alt="Book cover for ${item.volumeInfo.title || 'unknown'}">
-                        <div class="overlay df jcc">
+                        <div class="overlay scroll-bar df jcc">
                             <p class="text">${description}</p>
                         </div>
                     </div>
@@ -218,7 +218,7 @@ function renderFavorites(items) {
                     <h4>${itemName || 'Undefined'}</h4>
                     <div class="rel description-box">
                         <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
-                        <div class="overlay df jcc">
+                        <div class="overlay scroll-bar df jcc">
                             <p class="text">${description}</p>
                         </div>
                     </div>

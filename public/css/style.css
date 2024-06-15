@@ -7,6 +7,12 @@
     --d1: hsl(0, 0%, 0%, 0.1);
     --d2: hsl(0, 0%, 0%, 0.2);
     --color-1: #f5f5f5;
+    --color-2: rgb(69, 79, 122);
+}
+
+html{
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-2) var(--accent-color-2);
 }
 
 body {
@@ -155,12 +161,17 @@ body {
     transition: .5s ease;
     background-color: transparent;
     z-index: 1; 
-    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.scroll-bar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-2) var(--accent-color-2);
 }
 
 .description-box:hover .overlay {
     opacity: 1;
-    background-color: rgb(69, 79, 122);
+    background-color: var(--color-2);
 }
 
 .text {
