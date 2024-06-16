@@ -176,7 +176,7 @@ body {
 
 .scroll-bar {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-2) var(--accent-color-2);
+    scrollbar-color: var(--primary) var(--accent-color-2);
 }
 
 .description-box:hover .overlay {
