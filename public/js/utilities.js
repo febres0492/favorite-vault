@@ -319,7 +319,10 @@ function updatePassword(e){
         method: 'PUT'
     }).then((res) => {
         window.location.replace('/login')
-    }).catch(err => console.log(err))
+    }).catch(err => {
+        showMessageInModal(err.responseJSON.message)
+        console.log(err)
+    })
 }
 
 function loadPasswordForm(e){

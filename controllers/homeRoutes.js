@@ -65,16 +65,21 @@ router.put('/updatepassword', async (req, res) => {
         const tokenItem = await Token.findOne({ where: { user_email: req.body.email } });
 
         if (!tokenItem) {
-            return res.status(400).json({ message: 'Token not found' });
+            return res.status(400).json({ message: 'Token not found. Please make sure is the right token' });
         }
 
         if (req.body.token !== tokenItem.token) {
-            return res.status(400).json({ message: 'Token doesn\'t match' });
+            return res.status(400).json({ message: 'Token doesn\'t match. Please make sure is the right token' });
         }
         
         const currentUser = await User.findOne({ where: { email: req.body.email } });
         if (!currentUser) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found. Please check the email' });
+        }
+
+        const isNewPassSameAsCurPass = await bcrypt.compare(req.body.newPassword, currentUser.password);
+        if(isNewPassSameAsCurPass){
+            return res.status(400).json({ message: 'New password cannot be the same as Old password' });
         }
         
         const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);

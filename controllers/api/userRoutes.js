@@ -146,7 +146,7 @@ router.put('/update_password', async (req, res) => {
 
     const isNewPassSameAsCurPass = await bcrypt.compare(req.body.newPassword, currentUser.password);
     if(isNewPassSameAsCurPass){
-        return res.status(400).json({ message: 'Current password and New password cannot be the same' });
+        return res.status(400).json({ message: 'New password cannot be the same as Old password' });
     }
 
     const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
