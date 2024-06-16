@@ -172,6 +172,10 @@ body {
     background-color: transparent;
     z-index: 1; 
     overflow-y: hidden;
+
+    p{
+        --fvw: .2;
+    }
 }
 
 .scroll-bar {
@@ -187,7 +191,6 @@ body {
 
 .text {
     color: white;
-    font-size: 13px;
     text-align: center;
     padding: 10px;
     z-index: 2;
