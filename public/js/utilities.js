@@ -1,28 +1,3 @@
-// https://api.themoviedb.org/3/discover/movie?api_key=
-// movie name:
-// https://api.themoviedb.org/3/search/movie?api_key=&query=MOVIENAME
-// By genre:]
-// https://api.themoviedb.org/3/discover/movie?api_key=&with_genres=35,53,27
-// genre codes MOVIE
-// Action          28
-// Adventure       12
-// Animation       16
-// Comedy          35
-// Crime           80
-// Documentary     99
-// Drama           18
-// Family          10751
-// Fantasy         14
-// History         36
-// Horror          27
-// Music           10402
-// Mystery         9648
-// Romance         10749
-// Science Fiction 878
-// TV Movie        10770
-// Thriller        53
-// War             10752
-// Western         37
 
 // function to generate the movie cards
 function renderMovies(res)  {
@@ -52,6 +27,7 @@ function renderMovies(res)  {
                     <h4 class="card-title">${item.title || 'Unknown'}</h4>
                     <div class="rel description-box">
                         <img src="${imgUrl}" alt="Book cover for ${item.title || 'unknown'}">
+                        <img class="info-icon" src="/img/info-icon.png" alt="info icon for ${item.title} image">
                         <div class="overlay scroll-bar df jcc">
                             <p class="text description">${description}</p>
                         </div>
@@ -96,6 +72,7 @@ function renderBooks(response) {
                     <h4 class="card-title">${item.volumeInfo.title}</h4>
                     <div class="rel description-box">
                         <img src="${bookImg1}" alt="Book cover for ${item.volumeInfo.title || 'unknown'}">
+                        <img class="info-icon" src="/img/info-icon.png" alt="info icon for ${item.volumeInfo.title} image">
                         <div class="overlay scroll-bar df jcc">
                             <p class="text">${description}</p>
                         </div>
@@ -175,9 +152,9 @@ function deleteFavorite(btn, id ) {
         const cards = $('#main-content').find('.card').length
         if (!cards) {
             $('#main-content').html(`
-                <div class="col-12 py-2 jcc">
+                <div class="col-12 py-2 jcc tac">
                     <span class="horizontal-divider"></span>
-                    <h3>No Favorites Saved</h3>
+                    <h3 style="--fvw:1; --mt:3;">No Favorites Saved</h3>
                 </div>
             `)
         }
@@ -187,26 +164,21 @@ function deleteFavorite(btn, id ) {
 
 function renderFavorites(items) {
 
-    if (!items.length) {
-        $('#main-content').html(`
-            <div class="col-12 py-2 jcc tac" >
-                <span class="horizontal-divider"></span>
-                <h3 style="--fvw:1; --mt:10;">No Favorites Saved</h3>
-            </div>
-        `)
-        return
-    }
-
-    const container = $('#main-content')[0]
-    container.innerHTML = `
-        <div class="col-12 py-2">
+    $('#main-content').empty()
+    $('#main-content').append(`
+        <div class="col-12 py-2 px-3 tac">
             <span class="horizontal-divider"></span>
-            <h2>Favorites</h2>
+            <h3 class="fav-header" style="--fvw:1; --mt:3;">Favorites</h3>
         </div>
-        <div class="col-12 py-2 p-0">
+        <div class="col-12 py-2 px-0">
             <div id="fav-container" class="row"></div>
         </div>
-    `
+    `)
+
+    if (!items.length) {
+        $('.fav-header').text(`No Favorites Saved`)
+        return
+    }
 
     items.forEach((item, i) => {
         const { id, itemType, itemName, itemData } = item
@@ -218,6 +190,7 @@ function renderFavorites(items) {
                     <h4>${itemName || 'Undefined'}</h4>
                     <div class="rel description-box">
                         <img src="${item.itemImg}" alt="Cover for ${item.itemImg}">
+                        <img class="info-icon" src="/img/info-icon.png" alt="info icon for ${item.itemImg} image">
                         <div class="overlay scroll-bar df jcc">
                             <p class="text">${description}</p>
                         </div>

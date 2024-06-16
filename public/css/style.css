@@ -129,6 +129,16 @@ body {
         aspect-ratio: 1/1.3;
         object-fit: cover;
     }
+    .info-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 12%;
+        background-color: var(--d2);
+        aspect-ratio: 1;
+        border: 1px solid var(--l2);
+        border-radius: 15%;
+    }
 }
 
 .ellipsis {
@@ -161,7 +171,7 @@ body {
     transition: .5s ease;
     background-color: transparent;
     z-index: 1; 
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 .scroll-bar {
@@ -172,6 +182,7 @@ body {
 .description-box:hover .overlay {
     opacity: 1;
     background-color: var(--color-2);
+    overflow-y: scroll;
 }
 
 .text {
